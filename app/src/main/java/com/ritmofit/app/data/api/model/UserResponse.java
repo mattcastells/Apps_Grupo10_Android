@@ -13,5 +13,7 @@ public class UserResponse {
     public String gender;
     @SerializedName("profilePicture")
     public String profilePicture;
+    @SerializedName("password")
+    public String password;
 
 }

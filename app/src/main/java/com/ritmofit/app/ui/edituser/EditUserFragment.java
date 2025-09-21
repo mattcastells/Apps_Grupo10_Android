@@ -16,13 +16,10 @@ import androidx.fragment.app.Fragment;
 import com.ritmofit.app.R;
 import com.ritmofit.app.data.RitmoFitApiService;
 import com.ritmofit.app.data.api.UserService;
-import com.ritmofit.app.data.api.model.UserRequest;
 import com.ritmofit.app.data.repository.RepositoryCallback;
 import com.ritmofit.app.data.repository.UserRepository;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
 
 public class EditUserFragment extends Fragment {
     private static final int PICK_IMAGE = 1;
