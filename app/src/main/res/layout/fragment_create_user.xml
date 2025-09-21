@@ -102,44 +102,6 @@
             android:layout_marginRight="0dp"
             android:layout_marginStart="0dp"
             android:layout_marginEnd="0dp"/>
-        <Spinner
-            android:id="@+id/roleSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/white_rounded_border"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="0dp"/>
-        <!-- Student extra fields -->
-        <LinearLayout
-            android:id="@+id/studentFields"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-            <!-- No extra fields for student at creation -->
-        </LinearLayout>
-        <!-- Professor extra fields -->
-        <LinearLayout
-            android:id="@+id/professorFields"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-            <EditText
-                android:id="@+id/classTypesEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Tipos de clase que dicta (separados por coma)"
-                android:textSize="16sp"
-                android:backgroundTint="@color/ritmofit_gray"
-                android:textColor="@color/ritmofit_dark"
-                android:layout_marginBottom="10dp"/>
-        </LinearLayout>
         <Button
             android:id="@+id/createUserButton"
             android:layout_width="match_parent"

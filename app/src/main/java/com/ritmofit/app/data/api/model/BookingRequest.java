@@ -1,4 +1,4 @@
-package com.ritmofit.app.network.request;
+package com.ritmofit.app.data.api.model;
 
 import com.google.gson.annotations.SerializedName;
 
