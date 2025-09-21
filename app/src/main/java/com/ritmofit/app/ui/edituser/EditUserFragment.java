@@ -15,8 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.ritmofit.app.R;
 import com.ritmofit.app.network.ApiClient;
-import com.ritmofit.app.network.UserEditApi;
-import com.ritmofit.app.network.UserRequest;
+import com.ritmofit.app.network.api.UserApi;
+import com.ritmofit.app.network.request.UserRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -29,6 +29,7 @@ public class EditUserFragment extends Fragment {
     private Button saveEditButton, changePhotoButton;
     private LinearLayout studentFields, professorFields;
     private Uri selectedImageUri;
+    UserApi api = ApiClient.getClient().create(UserApi.class);
 
     @Nullable
     @Override
@@ -39,9 +40,9 @@ public class EditUserFragment extends Fragment {
         profileImage = view.findViewById(R.id.profileImage);
         nameEditText = view.findViewById(R.id.nameEditText);
         emailEditText = view.findViewById(R.id.emailEditText);
-    ageEditText = view.findViewById(R.id.ageEditText);
-    passwordEditText = view.findViewById(R.id.passwordEditText);
-    confirmPasswordEditText = view.findViewById(R.id.confirmPasswordEditText);
+        ageEditText = view.findViewById(R.id.ageEditText);
+        passwordEditText = view.findViewById(R.id.passwordEditText);
+        confirmPasswordEditText = view.findViewById(R.id.confirmPasswordEditText);
         genderSpinner = view.findViewById(R.id.genderSpinner);
         roleSpinner = view.findViewById(R.id.roleSpinner);
         saveEditButton = view.findViewById(R.id.saveEditButton);
@@ -104,14 +105,12 @@ public class EditUserFragment extends Fragment {
 
             // TODO: Obtener el ID real del usuario logueado
             String userId = "ID_DEL_USUARIO";
-            UserEditApi api = ApiClient.getClient().create(UserEditApi.class);
             UserRequest req = new UserRequest();
             req.name = name;
             req.email = email;
             req.age = Integer.valueOf(ageStr);
             req.gender = gender;
             req.profilePicture = null;
-            req.rol = role.equals("Estudiante") ? "student" : "professor";
             req.password = password;
             api.updateUser(userId, req).enqueue(new Callback<Object>() {
                 @Override

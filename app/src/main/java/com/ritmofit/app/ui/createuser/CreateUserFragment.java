@@ -15,9 +15,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.ritmofit.app.R;
 import com.ritmofit.app.network.ApiClient;
-import com.ritmofit.app.network.UserApi;
-import com.ritmofit.app.network.StudentRequest;
-import com.ritmofit.app.network.ProfessorRequest;
+import com.ritmofit.app.network.api.UserApi;
+import com.ritmofit.app.network.request.StudentRequest;
+import com.ritmofit.app.network.request.ProfessorRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -116,7 +116,7 @@ public class CreateUserFragment extends Fragment {
                 req.password = password;
                 req.currentBookings = null;
                 req.classHistory = null;
-                api.createStudent(req).enqueue(new Callback<Object>() {
+                api.createUser(req).enqueue(new Callback<Object>() {
                     @Override
                     public void onResponse(Call<Object> call, Response<Object> response) {
                         if (response.isSuccessful()) {
