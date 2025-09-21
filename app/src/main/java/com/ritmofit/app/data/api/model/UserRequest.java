@@ -1,7 +1,6 @@
-package com.ritmofit.app.network;
+package com.ritmofit.app.data.api.model;
 
 import com.google.gson.annotations.SerializedName;
-import java.util.List;
 
 public class UserRequest {
     @SerializedName("email")
@@ -13,9 +12,16 @@ public class UserRequest {
     @SerializedName("gender")
     public String gender;
     @SerializedName("profilePicture")
-    public String profilePicture;
-    @SerializedName("rol")
-    public String rol;
+    public String profilePicture = null;
     @SerializedName("password")
     public String password;
+
+    public UserRequest(String name, String email, Integer age, String gender, String password) {
+        this.name = name;
+        this.email = email;
+        this.age = age;
+        this.gender = gender;
+        this.password = password;
+    }
+
 }

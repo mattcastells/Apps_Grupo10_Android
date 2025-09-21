@@ -14,22 +14,28 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.ritmofit.app.R;
-import com.ritmofit.app.network.ApiClient;
-import com.ritmofit.app.network.UserApi;
-import com.ritmofit.app.network.StudentRequest;
-import com.ritmofit.app.network.ProfessorRequest;
+import com.ritmofit.app.data.RitmoFitApiService;
+import com.ritmofit.app.data.api.AuthService;
+import com.ritmofit.app.data.api.UserService;
+import com.ritmofit.app.data.api.model.UserRequest;
+import com.ritmofit.app.data.repository.AuthRepository;
+import com.ritmofit.app.data.repository.RepositoryCallback;
+import com.ritmofit.app.data.repository.UserRepository;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class CreateUserFragment extends Fragment {
     private static final int PICK_IMAGE = 1;
     private ImageView profileImage;
-    private EditText nameEditText, emailEditText, ageEditText, classTypesEditText, passwordEditText, confirmPasswordEditText;
-    private Spinner genderSpinner, roleSpinner;
+    private EditText nameEditText, emailEditText, ageEditText, passwordEditText, confirmPasswordEditText;
+    private Spinner genderSpinner;
     private Button createUserButton, changePhotoButton;
-    private LinearLayout studentFields, professorFields;
     private Uri selectedImageUri;
+
+    private UserRepository userRepository;
 
     @Nullable
     @Override
@@ -40,16 +46,12 @@ public class CreateUserFragment extends Fragment {
         profileImage = view.findViewById(R.id.profileImage);
         nameEditText = view.findViewById(R.id.nameEditText);
         emailEditText = view.findViewById(R.id.emailEditText);
-    ageEditText = view.findViewById(R.id.ageEditText);
-    passwordEditText = view.findViewById(R.id.passwordEditText);
-    confirmPasswordEditText = view.findViewById(R.id.confirmPasswordEditText);
+        ageEditText = view.findViewById(R.id.ageEditText);
+        passwordEditText = view.findViewById(R.id.passwordEditText);
+        confirmPasswordEditText = view.findViewById(R.id.confirmPasswordEditText);
         genderSpinner = view.findViewById(R.id.genderSpinner);
-        roleSpinner = view.findViewById(R.id.roleSpinner);
         createUserButton = view.findViewById(R.id.createUserButton);
         changePhotoButton = view.findViewById(R.id.changePhotoButton);
-        studentFields = view.findViewById(R.id.studentFields);
-        professorFields = view.findViewById(R.id.professorFields);
-        classTypesEditText = view.findViewById(R.id.classTypesEditText);
 
         // Gender spinner
         ArrayAdapter<CharSequence> genderAdapter = ArrayAdapter.createFromResource(getContext(),
@@ -57,27 +59,9 @@ public class CreateUserFragment extends Fragment {
         genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         genderSpinner.setAdapter(genderAdapter);
 
-        // Role spinner
-        ArrayAdapter<CharSequence> roleAdapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.role_options, android.R.layout.simple_spinner_item);
-        roleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        roleSpinner.setAdapter(roleAdapter);
-
-        roleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String role = (String) parent.getItemAtPosition(position);
-                if (role.equals("Estudiante")) {
-                    studentFields.setVisibility(View.VISIBLE);
-                    professorFields.setVisibility(View.GONE);
-                } else if (role.equals("Profesor")) {
-                    studentFields.setVisibility(View.GONE);
-                    professorFields.setVisibility(View.VISIBLE);
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
+        // Services
+        UserService apiService = RitmoFitApiService.getClient().create(UserService.class);
+        userRepository = new UserRepository(apiService);
 
         changePhotoButton.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -91,8 +75,6 @@ public class CreateUserFragment extends Fragment {
             String password = passwordEditText.getText().toString();
             String confirmPassword = confirmPasswordEditText.getText().toString();
             String gender = genderSpinner.getSelectedItem().toString();
-            String role = roleSpinner.getSelectedItem().toString();
-            String classTypes = classTypesEditText.getText().toString().trim();
 
             if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || TextUtils.isEmpty(ageStr) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword)) {
                 Toast.makeText(getContext(), "Por favor completa todos los campos obligatorios", Toast.LENGTH_SHORT).show();
@@ -103,59 +85,16 @@ public class CreateUserFragment extends Fragment {
                 return;
             }
 
-            UserApi api = ApiClient.getClient().create(UserApi.class);
-
-            if (role.equals("Estudiante")) {
-                StudentRequest req = new StudentRequest();
-                req.name = name;
-                req.email = email;
-                req.age = Integer.valueOf(ageStr);
-                req.gender = gender;
-                req.profilePicture = null;
-                req.rol = "student";
-                req.password = password;
-                req.currentBookings = null;
-                req.classHistory = null;
-                api.createStudent(req).enqueue(new Callback<Object>() {
-                    @Override
-                    public void onResponse(Call<Object> call, Response<Object> response) {
-                        if (response.isSuccessful()) {
-                            Toast.makeText(getContext(), "Usuario creado correctamente", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getContext(), "Error al crear usuario", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    @Override
-                    public void onFailure(Call<Object> call, Throwable t) {
-                        Toast.makeText(getContext(), "Error de red: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } else if (role.equals("Profesor")) {
-                ProfessorRequest req = new ProfessorRequest();
-                req.name = name;
-                req.email = email;
-                req.age = Integer.valueOf(ageStr);
-                req.gender = gender;
-                req.profilePicture = null;
-                req.rol = "professor";
-                req.password = password;
-                req.classTypes = java.util.Arrays.asList(classTypes.split(", *"));
-                req.taughtClasses = null;
-                api.createProfessor(req).enqueue(new Callback<Object>() {
-                    @Override
-                    public void onResponse(Call<Object> call, Response<Object> response) {
-                        if (response.isSuccessful()) {
-                            Toast.makeText(getContext(), "Usuario creado correctamente", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getContext(), "Error al crear usuario", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    @Override
-                    public void onFailure(Call<Object> call, Throwable t) {
-                        Toast.makeText(getContext(), "Error de red: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
+            userRepository.createUser(name, email, ageStr, gender, password, new RepositoryCallback<Void>() {
+                @Override
+                public void onSuccess(Void data) {
+                    Toast.makeText(getContext(), "Usuario creado exitosamente", Toast.LENGTH_SHORT).show();
+                }
+                @Override
+                public void onError(String message) {
+                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                }
+            });
         });
 
         return view;

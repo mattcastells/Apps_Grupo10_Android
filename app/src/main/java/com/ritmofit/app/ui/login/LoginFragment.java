@@ -18,7 +18,7 @@ import com.ritmofit.app.data.RitmoFitApiService;
 import com.ritmofit.app.data.api.AuthService;
 import com.ritmofit.app.data.api.model.AuthResponse;
 import com.ritmofit.app.data.repository.AuthRepository;
-import com.ritmofit.app.data.repository.AuthRepositoryCallback;
+import com.ritmofit.app.data.repository.RepositoryCallback;
 
 
 public class LoginFragment extends Fragment {
@@ -74,7 +74,7 @@ public class LoginFragment extends Fragment {
             return;
         }
 
-        authRepository.requestOtp(email, new AuthRepositoryCallback<Void>() {
+        authRepository.requestOtp(email, new RepositoryCallback<Void>() {
             @Override
             public void onSuccess(Void data) {
                 Toast.makeText(getContext(), "Código enviado a tu email", Toast.LENGTH_SHORT).show();
@@ -105,7 +105,7 @@ public class LoginFragment extends Fragment {
             return;
         }
 
-        authRepository.verifyOtp(email, otp, new AuthRepositoryCallback<AuthResponse>() {
+        authRepository.verifyOtp(email, otp, new RepositoryCallback<AuthResponse>() {
             @Override
             public void onSuccess(AuthResponse response) {
                 String token = response.token();

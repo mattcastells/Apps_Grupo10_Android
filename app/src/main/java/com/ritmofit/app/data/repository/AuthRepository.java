@@ -14,24 +14,22 @@ import com.ritmofit.app.data.api.model.OtpVerifyRequest;
 
 public class AuthRepository {
 
-    private AuthService apiService;
+    private AuthService authService;
 
-    public AuthRepository(AuthService apiService) {
-        this.apiService = apiService;
+    public AuthRepository(AuthService authService) {
+        this.authService = authService;
     }
 
 
-    public void requestOtp(String email, final AuthRepositoryCallback<Void> callback) {
+    public void requestOtp(String email, final RepositoryCallback<Void> callback) {
         OtpRequest requestBody = new OtpRequest(email);
 
-        apiService.requestOtp(requestBody).enqueue(new Callback<Void>() {
+        authService.requestOtp(requestBody).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
                 if (response.isSuccessful()) {
-                    // La llamada fue exitosa. Notificamos a través del callback.
-                    callback.onSuccess(null); // Usamos null porque no hay datos que devolver
+                    callback.onSuccess(null);
                 } else {
-                    // El servidor respondió con un error (email no encontrado, etc.)
                     callback.onError("Error al solicitar el código. Código: " + response.code());
                 }
             }
@@ -50,10 +48,10 @@ public class AuthRepository {
      * @param otp El código OTP ingresado.
      * @param callback El callback para notificar el resultado.
      */
-    public void verifyOtp(String email, String otp, final AuthRepositoryCallback<AuthResponse> callback) {
+    public void verifyOtp(String email, String otp, final RepositoryCallback<AuthResponse> callback) {
         OtpVerifyRequest requestBody = new OtpVerifyRequest(email, otp);
 
-        apiService.verifyOtp(requestBody).enqueue(new Callback<AuthResponse>() {
+        authService.verifyOtp(requestBody).enqueue(new Callback<AuthResponse>() {
             @Override
             public void onResponse(@NonNull Call<AuthResponse> call, @NonNull Response<AuthResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
