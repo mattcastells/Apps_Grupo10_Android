@@ -50,7 +50,7 @@ public class HomeFragment extends Fragment {
 
         String[] sedes = {"Todas", "Central", "Norte", "Oeste"};
         String[] disciplinas = {"Todas", "Yoga", "Funcional", "Zumba", "Spinning"};
-        String[] fechas = {"Hoy", "Mañana", "Próx. Sábado"};
+        String[] fechas = {"Todas", "Hoy", "Mañana", "Próx. Sábado"};
 
         ArrayAdapter<String> sedeAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, sedes);
         sedeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -76,7 +76,11 @@ public class HomeFragment extends Fragment {
             new ClassInfo("Central", "Yoga", "Hoy", "10:00", "Ana López", "8/20", "60 min", "Salón 1"),
             new ClassInfo("Norte", "Funcional", "Hoy", "18:00", "Juan Pérez", "15/20", "45 min", "Box 2"),
             new ClassInfo("Oeste", "Zumba", "Mañana", "19:00", "Carla Ruiz", "20/20", "50 min", "Salón 2"),
-            new ClassInfo("Central", "Spinning", "Próx. Sábado", "11:00", "Leo Díaz", "5/15", "40 min", "Salón 3")
+            new ClassInfo("Central", "Spinning", "Próx. Sábado", "11:00", "Leo Díaz", "5/15", "40 min", "Salón 3"),
+            new ClassInfo("Norte", "Yoga", "Mañana", "08:00", "María García", "12/15", "75 min", "Salón A"),
+            new ClassInfo("Oeste", "Funcional", "Próx. Sábado", "16:00", "Carlos Mendez", "18/25", "50 min", "Box 1"),
+            new ClassInfo("Central", "Zumba", "Hoy", "20:00", "Sofia Herrera", "22/25", "45 min", "Salón 2"),
+            new ClassInfo("Norte", "Spinning", "Mañana", "07:00", "Diego Torres", "10/20", "40 min", "Salón B")
         };
 
         Runnable updateCatalog = () -> {
@@ -84,17 +88,21 @@ public class HomeFragment extends Fragment {
             String sedeSel = filterSede.getSelectedItem().toString();
             String discSel = filterDisciplina.getSelectedItem().toString();
             String fechaSel = filterFecha.getSelectedItem().toString();
+            
+            boolean hasResults = false;
             for (ClassInfo c : clases) {
                 if ((sedeSel.equals("Todas") || c.sede.equals(sedeSel)) &&
                     (discSel.equals("Todas") || c.disciplina.equals(discSel)) &&
-                    (fechaSel.equals("Hoy") && c.fecha.equals("Hoy") ||
-                     fechaSel.equals("Mañana") && c.fecha.equals("Mañana") ||
-                     fechaSel.equals("Próx. Sábado") && c.fecha.equals("Próx. Sábado"))) {
+                    (fechaSel.equals("Todas") || c.fecha.equals(fechaSel))) {
+                    
+                    hasResults = true;
                     LinearLayout card = new LinearLayout(requireContext());
                     card.setOrientation(LinearLayout.VERTICAL);
                     card.setBackgroundResource(R.drawable.class_card_bg);
                     card.setElevation(8f);
                     card.setPadding(24, 20, 24, 20);
+                    card.setClickable(true);
+                    card.setFocusable(true);
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     params.setMargins(0, 0, 0, 24);
@@ -127,8 +135,34 @@ public class HomeFragment extends Fragment {
                     sede.setTextSize(16);
                     card.addView(sede);
 
+                    // Hacer la tarjeta clickeable para navegar al detalle
+                    card.setOnClickListener(cardView -> {
+                        Bundle args = new Bundle();
+                        args.putString("disciplina", c.disciplina);
+                        args.putString("hora", c.hora);
+                        args.putString("profesor", c.profesor);
+                        args.putString("cupos", c.cupos);
+                        args.putString("duracion", c.duracion);
+                        args.putString("sede", c.sede);
+                        args.putString("ubicacion", c.ubicacion);
+                        args.putString("fecha", c.fecha);
+                        
+                        Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_classDetailFragment, args);
+                    });
+
                     classCatalogList.addView(card);
                 }
+            }
+            
+            // Mostrar mensaje si no hay resultados
+            if (!hasResults) {
+                TextView noResults = new TextView(requireContext());
+                noResults.setText("No se encontraron clases con los filtros seleccionados");
+                noResults.setTextSize(16);
+                noResults.setTextColor(getResources().getColor(R.color.ritmofit_gray));
+                noResults.setGravity(Gravity.CENTER);
+                noResults.setPadding(24, 48, 24, 48);
+                classCatalogList.addView(noResults);
             }
         };
 

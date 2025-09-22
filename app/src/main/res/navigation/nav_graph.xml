@@ -19,7 +19,11 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.ritmofit.app.ui.home.HomeFragment"
-        android:label="Home" />
+        android:label="Home">
+        <action
+            android:id="@+id/action_homeFragment_to_classDetailFragment"
+            app:destination="@id/classDetailFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/scanQrFragment"
@@ -49,4 +53,34 @@
         android:id="@+id/editUserFragment"
         android:name="com.ritmofit.app.ui.edituser.EditUserFragment"
         android:label="Editar información" />
+
+    <fragment
+        android:id="@+id/classDetailFragment"
+        android:name="com.ritmofit.app.ui.classdetail.ClassDetailFragment"
+        android:label="Detalle de Clase">
+        <argument
+            android:name="disciplina"
+            app:argType="string" />
+        <argument
+            android:name="hora"
+            app:argType="string" />
+        <argument
+            android:name="profesor"
+            app:argType="string" />
+        <argument
+            android:name="cupos"
+            app:argType="string" />
+        <argument
+            android:name="duracion"
+            app:argType="string" />
+        <argument
+            android:name="sede"
+            app:argType="string" />
+        <argument
+            android:name="ubicacion"
+            app:argType="string" />
+        <argument
+            android:name="fecha"
+            app:argType="string" />
+    </fragment>
 </navigation>
