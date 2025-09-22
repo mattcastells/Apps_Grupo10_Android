@@ -19,6 +19,8 @@ import com.ritmofit.app.data.api.AuthService;
 import com.ritmofit.app.data.api.model.AuthResponse;
 import com.ritmofit.app.data.repository.AuthRepository;
 import com.ritmofit.app.data.repository.RepositoryCallback;
+import com.ritmofit.app.data.session.JwtHelper;
+import com.ritmofit.app.data.session.SessionManager;
 
 
 public class LoginFragment extends Fragment {
@@ -109,7 +111,12 @@ public class LoginFragment extends Fragment {
             @Override
             public void onSuccess(AuthResponse response) {
                 String token = response.token();
-                // TODO: Guardar el token y utilizarlo para mantener la sesión
+
+                String userId = JwtHelper.tryExtractUserId(token);
+
+                SessionManager sm = new SessionManager(requireContext().getApplicationContext());
+                sm.saveAuth(token, userId, email);
+
                 Toast.makeText(getContext(), "¡Login exitoso!", Toast.LENGTH_LONG).show();
 
                 // Navegamos al Home

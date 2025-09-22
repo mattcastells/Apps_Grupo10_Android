@@ -13,7 +13,7 @@ import retrofit2.http.Path;
 public interface UserService {
 
     @GET("users/{id}")
-    Call<UserResponse> getUser(@Body UserRequest user);
+    Call<UserResponse> getUser(@Path("id") String id);
 
     @POST("users")
     Call<Void> createUser(@Body UserRequest user);
