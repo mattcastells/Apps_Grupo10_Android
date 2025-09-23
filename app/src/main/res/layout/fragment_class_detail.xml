@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ritmofit_beige">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:paddingBottom="80dp">
+
+        <!-- Header con botón de volver -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="24dp">
+
+            <Button
+                android:id="@+id/backButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:text="←"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/ritmofit_orange"
+                android:layout_marginEnd="16dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Detalle de Clase"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/ritmofit_dark"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+        <!-- Card principal con información de la clase -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/class_card_bg"
+            android:elevation="8dp"
+            android:padding="24dp"
+            android:layout_marginBottom="24dp">
+
+            <!-- Título de la clase -->
+            <TextView
+                android:id="@+id/classTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yoga"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:textColor="@color/ritmofit_orange"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp" />
+
+            <!-- Información básica -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:id="@+id/classProfesor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Profesor: Ana López"
+                    android:textSize="18sp"
+                    android:textColor="@color/ritmofit_dark"
+                    android:layout_marginBottom="8dp"
+                    android:drawableStart="@android:drawable/ic_menu_myplaces"
+                    android:drawableTint="@color/ritmofit_orange"
+                    android:drawablePadding="12dp"
+                    android:gravity="center_vertical" />
+
+                <TextView
+                    android:id="@+id/classFecha"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fecha: Hoy"
+                    android:textSize="18sp"
+                    android:textColor="@color/ritmofit_dark"
+                    android:layout_marginBottom="8dp"
+                    android:drawableStart="@android:drawable/ic_menu_today"
+                    android:drawableTint="@color/ritmofit_orange"
+                    android:drawablePadding="12dp"
+                    android:gravity="center_vertical" />
+
+                <TextView
+                    android:id="@+id/classHorario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Horario: 10:00"
+                    android:textSize="18sp"
+                    android:textColor="@color/ritmofit_dark"
+                    android:layout_marginBottom="8dp"
+                    android:drawableStart="@android:drawable/ic_menu_recent_history"
+                    android:drawableTint="@color/ritmofit_orange"
+                    android:drawablePadding="12dp"
+                    android:gravity="center_vertical" />
+
+                <TextView
+                    android:id="@+id/classDuracion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Duración: 60 min"
+                    android:textSize="18sp"
+                    android:textColor="@color/ritmofit_dark"
+                    android:layout_marginBottom="8dp"
+                    android:drawableStart="@android:drawable/ic_menu_agenda"
+                    android:drawableTint="@color/ritmofit_orange"
+                    android:drawablePadding="12dp"
+                    android:gravity="center_vertical" />
+
+                <TextView
+                    android:id="@+id/classUbicacion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ubicación: Central - Salón 1"
+                    android:textSize="18sp"
+                    android:textColor="@color/ritmofit_dark"
+                    android:layout_marginBottom="8dp"
+                    android:drawableStart="@android:drawable/ic_dialog_map"
+                    android:drawableTint="@color/ritmofit_orange"
+                    android:drawablePadding="12dp"
+                    android:gravity="center_vertical" />
+
+                <TextView
+                    android:id="@+id/classCupos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cupos disponibles: 8/20"
+                    android:textSize="18sp"
+                    android:textColor="@color/ritmofit_dark"
+                    android:drawableStart="@android:drawable/ic_menu_sort_by_size"
+                    android:drawableTint="@color/ritmofit_orange"
+                    android:drawablePadding="12dp"
+                    android:gravity="center_vertical" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Descripción de la clase -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/class_card_bg"
+            android:elevation="4dp"
+            android:padding="20dp"
+            android:layout_marginBottom="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Descripción"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/ritmofit_orange"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:id="@+id/classDescripcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Clase de yoga que combina posturas, respiración y meditación para mejorar la flexibilidad, fuerza y bienestar mental. Ideal para todos los niveles."
+                android:textSize="16sp"
+                android:textColor="@color/ritmofit_dark"
+                android:lineSpacingExtra="4dp" />
+
+        </LinearLayout>
+
+        <!-- Información adicional -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/class_card_bg"
+            android:elevation="4dp"
+            android:padding="20dp"
+            android:layout_marginBottom="32dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Información importante"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/ritmofit_orange"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="• Llega 10 minutos antes del inicio de la clase\n• Trae tu propia botella de agua\n• Usa ropa cómoda para ejercitarte\n• Las reservas se pueden cancelar hasta 2 horas antes"
+                android:textSize="16sp"
+                android:textColor="@color/ritmofit_dark"
+                android:lineSpacingExtra="4dp" />
+
+        </LinearLayout>
+
+        <!-- Botón de reservar -->
+        <Button
+            android:id="@+id/reservarButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Reservar Clase"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/ritmofit_orange"
+            android:elevation="8dp" />
+
+    </LinearLayout>
+
+</ScrollView>
