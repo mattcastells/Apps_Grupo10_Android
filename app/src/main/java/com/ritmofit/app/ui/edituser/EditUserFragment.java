@@ -114,7 +114,7 @@ public class EditUserFragment extends Fragment {
                     Toast.makeText(getContext(), "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show(); return;
                 }
             }
-            final String passwordToSend = wantsPwdChange ? passInput : null; // efectivamente final
+            final String passwordToSend = wantsPwdChange ? passInput : null;
 
             setSaving(true);
 
