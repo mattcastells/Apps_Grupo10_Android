@@ -9,56 +9,47 @@
             android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content"
             android:padding="24dp" android:gravity="center_horizontal">
 
-        <TextView
-            android:id="@+id/profileTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Perfil"
-            android:textSize="26sp"
-            android:textStyle="bold"
-            android:textColor="@color/ritmofit_orange"
-            android:gravity="center"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="8dp"/>
-        <TextView
-            android:id="@+id/profileSubtitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Aquí podés ver y editar tu información personal."
-            android:textSize="16sp"
-            android:textColor="@color/ritmofit_dark"
-            android:gravity="center"
-            android:layout_marginBottom="24dp"/>
-        <ImageView
-            android:id="@+id/profileImage"
-            android:layout_width="140dp" android:layout_height="140dp"
-            android:src="@drawable/bodybuilder"
-            android:scaleType="centerCrop"
-            android:background="@android:color/transparent"
-            android:contentDescription="Foto de perfil"
-            android:layout_marginBottom="24dp"
-            android:layout_marginTop="0dp"/>
-        <Button
-            android:id="@+id/changePhotoButton"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="Cambiar foto"
-            android:textSize="17sp"
-            android:layout_marginTop="12dp"
-            android:backgroundTint="@color/ritmofit_orange"
-            android:textColor="@color/white"/>
+            <TextView
+                android:id="@+id/profileTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Perfil"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:textColor="@color/ritmofit_orange"
+                android:gravity="center"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="8dp"/>
+            <TextView
+                android:id="@+id/profileSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Acá podés ver tu información personal."
+                android:textSize="16sp"
+                android:textColor="@color/ritmofit_dark"
+                android:gravity="center"
+                android:layout_marginBottom="24dp"/>
+            <ImageView
+                android:id="@+id/profileImage"
+                android:layout_width="140dp" android:layout_height="140dp"
+                android:src="@drawable/bodybuilder"
+                android:scaleType="centerCrop"
+                android:background="@android:color/transparent"
+                android:contentDescription="Foto de perfil"
+                android:layout_marginBottom="24dp"
+                android:layout_marginTop="0dp"/>
 
-        <Button
-            android:id="@+id/editInfoButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Editar información"
-            android:textSize="17sp"
-            android:backgroundTint="@android:color/holo_blue_dark"
-            android:textColor="@color/white"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"/>
+            <Button
+                android:id="@+id/changePhotoButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="@color/ritmofit_orange"
+                android:text="Cambiar foto"
+                android:textColor="@color/white"
+                android:textSize="17sp" />
 
-        <TextView
+            <TextView
             android:id="@+id/nameLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -68,60 +59,116 @@
             android:textColor="@color/ritmofit_dark"
             android:layout_marginTop="18dp"
             android:layout_marginBottom="2dp"/>
-        <EditText
-            android:id="@+id/nameEditText"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:hint="Ingresá tu nombre"
-            android:textSize="18sp"
-            android:backgroundTint="@color/ritmofit_gray"
-            android:textColor="@color/ritmofit_dark"
-            android:layout_marginBottom="10dp"/>
-        <TextView
-            android:id="@+id/nameHint"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Este será el nombre que verán otros usuarios."
-            android:textSize="13sp"
-            android:textColor="@color/ritmofit_dark"
-            android:layout_marginBottom="10dp"/>
-        <TextView
-            android:id="@+id/emailLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Correo electrónico"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:textColor="@color/ritmofit_dark"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="2dp"/>
-        <EditText
-            android:id="@+id/emailEditText"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:hint="Ingresá tu email"
-            android:inputType="textEmailAddress"
-            android:textSize="18sp"
-            android:backgroundTint="@color/ritmofit_gray"
-            android:textColor="@color/ritmofit_dark"
-            android:layout_marginBottom="10dp"/>
-        <TextView
-            android:id="@+id/emailHint"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Asegurate de que tu email sea válido para recibir notificaciones."
-            android:textSize="13sp"
-            android:textColor="@color/ritmofit_dark"
-            android:layout_marginBottom="10dp"/>
+            <TextView
+                android:id="@+id/nameField"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:hint="Error al cargar tu nombre de usuario"
+                android:textSize="18sp"
+                android:backgroundTint="@color/ritmofit_gray"
+                android:textColor="@color/ritmofit_dark"
+                android:layout_marginBottom="10dp"/>
+            <TextView
+                android:id="@+id/nameHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Este será el nombre que verán otros usuarios."
+                android:textSize="13sp"
+                android:textColor="@color/ritmofit_dark"
+                android:layout_marginBottom="10dp"/>
 
-        <Button
-            android:id="@+id/saveButton"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="Guardar cambios"
-            android:textSize="18sp"
-            android:layout_marginTop="28dp"
-            android:layout_marginBottom="10dp"
-            android:backgroundTint="@color/ritmofit_orange"
-            android:textColor="@color/white"/>
-        <Button
+            <TextView
+                android:id="@+id/emailLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Correo electrónico"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/ritmofit_dark"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="2dp"/>
+            <TextView
+                android:id="@+id/emailField"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:hint="Error al cargar tu email"
+                android:textSize="18sp"
+                android:backgroundTint="@color/ritmofit_gray"
+                android:textColor="@color/ritmofit_dark"
+                android:layout_marginBottom="10dp"/>
+            <TextView
+                android:id="@+id/emailHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Asegurate de que tu email sea válido para recibir notificaciones."
+                android:textSize="13sp"
+                android:textColor="@color/ritmofit_dark"
+                android:layout_marginBottom="10dp"/>
+
+            <TextView
+                android:id="@+id/ageLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Edad"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/ritmofit_dark"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="2dp"/>
+            <TextView
+                android:id="@+id/ageField"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:hint="Error al cargar tu edad"
+                android:textSize="18sp"
+                android:backgroundTint="@color/ritmofit_gray"
+                android:textColor="@color/ritmofit_dark"
+                android:layout_marginBottom="10dp"/>
+            <TextView
+                android:id="@+id/ageHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Recuerda actualizar tu edad cada año."
+                android:textSize="13sp"
+                android:textColor="@color/ritmofit_dark"
+                android:layout_marginBottom="10dp"/>
+
+            <TextView
+                android:id="@+id/genderLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Género"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/ritmofit_dark"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="2dp"/>
+            <TextView
+                android:id="@+id/genderField"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:hint="Error al cargar tu género"
+                android:textSize="18sp"
+                android:backgroundTint="@color/ritmofit_gray"
+                android:textColor="@color/ritmofit_dark"
+                android:layout_marginBottom="10dp"/>
+            <TextView
+                android:id="@+id/genderHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Escoge el género con el que te sientas más cómodx."
+                android:textSize="13sp"
+                android:textColor="@color/ritmofit_dark"
+                android:layout_marginBottom="10dp"/>
+
+            <Button
+                android:id="@+id/editInfoButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:backgroundTint="@android:color/holo_blue_dark"
+                android:text="Editar información"
+                android:textColor="@color/white"
+                android:textSize="17sp" />
+
+            <Button
             android:id="@+id/logoutButton"
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:text="Cerrar sesión"
@@ -129,6 +176,6 @@
             android:layout_marginTop="16dp"
             android:backgroundTint="@color/ritmofit_dark"
             android:textColor="@color/white"/>
-    </LinearLayout>
+        </LinearLayout>
     </ScrollView>
 </FrameLayout>

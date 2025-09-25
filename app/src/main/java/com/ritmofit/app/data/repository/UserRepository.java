@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.ritmofit.app.data.api.UserService;
 import com.ritmofit.app.data.api.model.OtpRequest;
+import com.ritmofit.app.data.api.model.UpdatePhotoRequest;
 import com.ritmofit.app.data.api.model.UserRequest;
 
 import retrofit2.Call;
@@ -40,6 +41,7 @@ public class UserRepository {
                     callback.onError("Error al crear usuario: Código " + response.code());
                 }
             }
+
             @Override
             public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                 // Ocurrió un error de red (sin conexión, timeout, etc.)
@@ -67,6 +69,7 @@ public class UserRepository {
                     callback.onError("Error al guardar cambios: Código " + response.code());
                 }
             }
+
             @Override
             public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
                 callback.onError("Error de red: " + t.getMessage());
@@ -74,4 +77,20 @@ public class UserRepository {
         });
     }
 
+    public void updateUserPhoto(String id, String photoUrl, RepositoryCallback<Void> callback) {
+        UserService api =
+                com.ritmofit.app.data.RitmoFitApiService.getClient().create(UserService.class);
+        UpdatePhotoRequest body =
+                new UpdatePhotoRequest(photoUrl);
+
+        api.updateUserPhoto(id, body).enqueue(new retrofit2.Callback<Void>() {
+            @Override public void onResponse(@NonNull retrofit2.Call<Void> call, @NonNull retrofit2.Response<Void> response) {
+                if (response.isSuccessful()) callback.onSuccess(null);
+                else callback.onError("Error al actualizar foto: " + response.code());
+            }
+            @Override public void onFailure(@NonNull retrofit2.Call<Void> call, @NonNull Throwable t) {
+                callback.onError("Error de red: " + t.getMessage());
+            }
+        });
+    }
 }
