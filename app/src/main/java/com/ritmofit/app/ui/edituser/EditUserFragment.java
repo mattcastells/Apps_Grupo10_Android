@@ -201,7 +201,6 @@ public class EditUserFragment extends Fragment {
             setSaving(false);
             cb.onError("No hay ID de usuario en sesión");
             return;
-            //hola
         }
         com.ritmofit.app.data.api.model.UpdatePhotoRequest body =
                 new com.ritmofit.app.data.api.model.UpdatePhotoRequest(secureUrl);
