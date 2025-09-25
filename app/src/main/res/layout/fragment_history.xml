@@ -59,116 +59,12 @@
                     android:textSize="14sp"
                     android:textColor="@color/ritmofit_dark"/>
 
-                <!-- CARD 1 -->
-                <com.google.android.material.card.MaterialCardView
+                <!-- CLASES -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvHistory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:cardUseCompatPadding="true"
-                    app:strokeWidth="1dp"
-                    app:cardCornerRadius="16dp">
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:padding="16dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:text="Funcional HIIT"
-                            android:textSize="18sp"
-                            android:textColor="@color/ritmofit_dark"
-                            android:textStyle="bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-
-                        <TextView
-                            android:text="15/09 · 18:00 — Sede Centro"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="4dp"/>
-
-                        <TextView
-                            android:text="Prof: Laura Pérez · Duración: 60'"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="2dp"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- CARD 2 -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    app:cardUseCompatPadding="true"
-                    app:strokeWidth="1dp"
-                    app:cardCornerRadius="16dp">
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:padding="16dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:text="Cross Training"
-                            android:textSize="18sp"
-                            android:textColor="@color/ritmofit_dark"
-                            android:textStyle="bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-
-                        <TextView
-                            android:text="11/09 · 19:30 — Sede Norte"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="4dp"/>
-
-                        <TextView
-                            android:text="Prof: Marcos Díaz · Duración: 45'"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="2dp"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- CARD 3 -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    app:cardUseCompatPadding="true"
-                    app:strokeWidth="1dp"
-                    app:cardCornerRadius="16dp">
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:padding="16dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:text="Stretching"
-                            android:textSize="18sp"
-                            android:textColor="@color/ritmofit_dark"
-                            android:textStyle="bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-
-                        <TextView
-                            android:text="03/09 · 17:00 — Sede Sur"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="4dp"/>
-
-                        <TextView
-                            android:text="Prof: Ana Gómez · Duración: 30'"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingTop="2dp"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                    android:layout_marginTop="16dp"/>
 
             </LinearLayout>
         </LinearLayout>
