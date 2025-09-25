@@ -1,5 +1,6 @@
 package com.ritmofit.app.data.api;
 
+import com.ritmofit.app.data.api.model.UpdatePhotoRequest;
 import com.ritmofit.app.data.api.model.UserRequest;
 import com.ritmofit.app.data.api.model.UserResponse;
 
@@ -20,4 +21,8 @@ public interface UserService {
 
     @PUT("users/{id}")
     Call<Void> updateUser(@Path("id") String id, @Body UserRequest user);
+
+    @PUT("users/{id}/photo")
+    Call<Void> updateUserPhoto(@Path("id") String id, @Body UpdatePhotoRequest body);
+
 }
