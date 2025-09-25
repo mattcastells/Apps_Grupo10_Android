@@ -83,4 +83,10 @@
             android:name="fecha"
             app:argType="string" />
     </fragment>
+
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.ritmofit.app.ui.history.HistoryFragment"
+        android:label="Historial" />
+
 </navigation>
