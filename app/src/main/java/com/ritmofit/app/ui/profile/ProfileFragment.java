@@ -67,6 +67,20 @@ public class ProfileFragment extends Fragment {
         //userService = com.ritmofit.app.data.RitmoFitApiService.getClient().create(com.ritmofit.app.data.api.UserService.class);
         userService = RitmoFitApiService.getClient(requireContext()).create(UserService.class);
 
+        final androidx.navigation.NavController nav =
+                androidx.navigation.fragment.NavHostFragment.findNavController(ProfileFragment.this);
+
+        nav.getCurrentBackStackEntry()
+                .getSavedStateHandle()
+                .getLiveData("refresh_profile", false)
+                .observe(getViewLifecycleOwner(), should -> {
+                    if (Boolean.TRUE.equals(should)) {
+                        // reset para no re-disparar
+                        nav.getCurrentBackStackEntry().getSavedStateHandle().set("refresh_profile", false);
+                        reloadProfile(); // ← recarga
+                    }
+                });
+
         String userId = sessionManager.getUserId();
         String email  = sessionManager.getEmail();
 
@@ -222,4 +236,36 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    private void reloadProfile() {
+        String userId = sessionManager.getUserId();
+        if (userId == null) {
+            Toast.makeText(getContext(), "No hay ID en sesión. Intenta reingresar.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        userService.getUser(userId).enqueue(new retrofit2.Callback<com.ritmofit.app.data.api.model.UserResponse>() {
+            @Override public void onResponse(retrofit2.Call<com.ritmofit.app.data.api.model.UserResponse> call,
+                                             retrofit2.Response<com.ritmofit.app.data.api.model.UserResponse> resp) {
+                if (resp.isSuccessful() && resp.body() != null) {
+                    com.ritmofit.app.data.api.model.UserResponse u = resp.body();
+                    nameField.setText(u.name != null ? u.name : "—");
+                    emailField.setText(u.email != null ? u.email : "—");
+                    if (u.age != null) ageField.setText(String.valueOf(u.age)); else ageField.setText("—");
+                    genderField.setText(u.gender != null ? u.gender : "—");
+
+                    if (u.profilePicture != null && !u.profilePicture.isEmpty()) {
+                        com.bumptech.glide.Glide.with(ProfileFragment.this)
+                                .load(u.profilePicture)
+                                .placeholder(R.drawable.bodybuilder)
+                                .error(android.R.drawable.stat_notify_error)
+                                .into(profileImage);
+                    }
+                } else {
+                    Toast.makeText(getContext(), "No se pudo actualizar el perfil ("+resp.code()+")", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override public void onFailure(retrofit2.Call<com.ritmofit.app.data.api.model.UserResponse> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de red: "+t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

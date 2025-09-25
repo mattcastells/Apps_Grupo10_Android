@@ -95,6 +95,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginBottom="10dp"
+            android:entries="@array/gender_options"
             android:background="@drawable/white_rounded_border"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
