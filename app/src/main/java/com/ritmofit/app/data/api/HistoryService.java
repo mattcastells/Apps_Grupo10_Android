@@ -15,6 +15,11 @@ public interface HistoryService {
             @Query("from") String fromDate,
             @Query("to")   String toDate
     );
+
+    @GET("history/attendances/{attendanceId}")
+    retrofit2.Call<com.ritmofit.app.data.api.model.HistoryDetailResponse>
+    getAttendanceDetail(@retrofit2.http.Path("attendanceId") String attendanceId);
+
 }
 
 

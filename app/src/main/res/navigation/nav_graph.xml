@@ -87,6 +87,19 @@
     <fragment
         android:id="@+id/historyFragment"
         android:name="com.ritmofit.app.ui.history.HistoryFragment"
-        android:label="Historial" />
+        android:label="Historial">
+        <action
+            android:id="@+id/action_historyFragment_to_historyDetailFragment"
+            app:destination="@id/historyDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/historyDetailFragment"
+        android:name="com.ritmofit.app.ui.history.HistoryDetailFragment"
+        android:label="Detalle asistencia">
+        <argument
+            android:name="attendanceId"
+            app:argType="string" />
+    </fragment>
 
 </navigation>

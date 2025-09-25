@@ -41,4 +41,17 @@ public class HistoryRepository {
             }
         });
     }
+
+    public void getDetail(String attendanceId,
+                          RepositoryCallback<com.ritmofit.app.data.api.model.HistoryDetailResponse> cb) {
+        api.getAttendanceDetail(attendanceId).enqueue(new retrofit2.Callback<com.ritmofit.app.data.api.model.HistoryDetailResponse>() {
+            @Override public void onResponse(@NonNull retrofit2.Call<com.ritmofit.app.data.api.model.HistoryDetailResponse> call,
+                                             @NonNull retrofit2.Response<com.ritmofit.app.data.api.model.HistoryDetailResponse> resp) {
+                if (resp.isSuccessful() && resp.body()!=null) cb.onSuccess(resp.body());
+                else cb.onError("Error " + resp.code());
+            }
+            @Override public void onFailure(@NonNull retrofit2.Call<com.ritmofit.app.data.api.model.HistoryDetailResponse> call,
+                                            @NonNull Throwable t) { cb.onError("Error de red: " + t.getMessage()); }
+        });
+    }
 }
