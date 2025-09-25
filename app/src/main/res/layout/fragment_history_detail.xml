@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ritmofit_beige">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Banner -->
+        <LinearLayout
+            android:id="@+id/topBannerHistoryDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/ritmofit_orange"
+            android:padding="16dp">
+            <TextView
+                android:id="@+id/tvBannerTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Detalle asistencia"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="22sp"/>
+        </LinearLayout>
+
+        <!-- Contenido -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:paddingBottom="80dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Fila: Sede -->
+            <TextView
+                android:id="@+id/tvSite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textColor="@color/ritmofit_dark"
+                android:text="Sede — "/>
+
+            <!-- Fecha -->
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Viernes 19/09/25"/>
+
+            <!-- Hora -->
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Horario: 18:30"/>
+
+            <!-- Duración -->
+            <TextView
+                android:id="@+id/tvDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Duración: 60'"/>
+
+            <!-- Disciplina -->
+            <TextView
+                android:id="@+id/tvDiscipline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textStyle="bold"
+                android:textColor="@color/ritmofit_dark"
+                android:text="Disciplina: "/>
+
+            <!-- Instructor -->
+            <TextView
+                android:id="@+id/tvTeacher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Instructor: "/>
+
+            <!-- Estado -->
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Estado de la asistencia: "/>
+
+            <!-- Mensaje si NO hay reseña -->
+            <TextView
+                android:id="@+id/tvNoReview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="No realizaste comentarios dentro de las 24hs"
+                android:visibility="gone"/>
+
+            <!-- Título reseña -->
+            <TextView
+                android:id="@+id/tvReviewTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Tu reseña"
+                android:textStyle="bold"
+                android:textColor="@color/ritmofit_dark"
+                android:visibility="gone"/>
+
+            <!-- Estrellas -->
+            <LinearLayout
+                android:id="@+id/llStars"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:visibility="gone">
+
+                <ImageView android:id="@+id/star1" android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_star_border_24"/>
+                <ImageView android:id="@+id/star2" android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_star_border_24"/>
+                <ImageView android:id="@+id/star3" android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_star_border_24"/>
+                <ImageView android:id="@+id/star4" android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_star_border_24"/>
+                <ImageView android:id="@+id/star5" android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_star_border_24"/>
+            </LinearLayout>
+
+            <!-- Comentario -->
+            <TextView
+                android:id="@+id/tvReviewComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="..."
+                android:visibility="gone"/>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

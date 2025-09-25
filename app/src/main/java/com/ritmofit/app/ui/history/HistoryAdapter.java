@@ -4,14 +4,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.ritmofit.app.R;
 import com.ritmofit.app.data.api.model.HistoryItemResponse;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.VH> {
+
+    public interface OnItemClick { void onClick(HistoryItemResponse item); }
+    private OnItemClick onItemClick;
+    public void setOnItemClick(OnItemClick l){ this.onItemClick = l; }
 
     private final List<HistoryItemResponse> data = new ArrayList<>();
 
@@ -31,32 +38,40 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.VH> {
     @Override public void onBindViewHolder(@NonNull VH h, int pos) {
         HistoryItemResponse it = data.get(pos);
         h.tvTitle.setText(it.discipline);
-        // Ej: "15/09 · 18:00 — Sede Centro"
-        String whenWhere = prettyWhen(it.startDateTime) + " — " + it.site;
+
+        // "15/09 · 18:00 — Sede Centro"
+        String whenWhere = prettyWhen(it.startDateTime) + " — " + safe(it.site);
         h.tvWhenWhere.setText(whenWhere);
-        // Ej: "Prof: Laura Pérez · Duración: 60'"
+
+        // "Prof: Laura Pérez · Duración: 60'"
         String extra = "Prof: " + safe(it.teacher) + " · Duración: " + it.durationMinutes + "'";
         h.tvExtra.setText(extra);
     }
 
     @Override public int getItemCount() { return data.size(); }
 
-    static class VH extends RecyclerView.ViewHolder {
+    class VH extends RecyclerView.ViewHolder {
         TextView tvTitle, tvWhenWhere, tvExtra;
         VH(@NonNull View v) {
             super(v);
             tvTitle = v.findViewById(R.id.tvTitle);
             tvWhenWhere = v.findViewById(R.id.tvWhenWhere);
             tvExtra = v.findViewById(R.id.tvExtra);
+
+            v.setOnClickListener(view -> {
+                int pos = getBindingAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION && onItemClick != null) {
+                    onItemClick.onClick(data.get(pos));
+                }
+            });
         }
     }
 
-    private static String safe(String s){ return s==null? "—" : s; }
+    private static String safe(String s){ return (s==null || s.isEmpty())? "—" : s; }
 
-    // Recorta ISO "YYYY-MM-DDTHH:MM" -> "dd/MM · HH:mm"
+    // ISO "YYYY-MM-DDTHH:MM" -> "dd/MM · HH:mm"
     private static String prettyWhen(String iso) {
         if (iso == null || iso.length()<16) return "—";
-        // asume formato ISO básico
         String d = iso.substring(8,10) + "/" + iso.substring(5,7);
         String t = iso.substring(11,16);
         return d + " · " + t;

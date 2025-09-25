@@ -46,6 +46,13 @@ public class HistoryFragment extends Fragment {
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));
         rv.setAdapter(adapter);
 
+        adapter.setOnItemClick(item -> {
+            android.os.Bundle args = new android.os.Bundle();
+            args.putString("attendanceId", item.id);
+            androidx.navigation.fragment.NavHostFragment.findNavController(this)
+                    .navigate(R.id.action_historyFragment_to_historyDetailFragment, args);
+        });
+
         repo = new HistoryRepository(requireContext());
 
         String[] range = last30Days(); // [from, to] formato YYYY-MM-DD
