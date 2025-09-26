@@ -24,62 +24,50 @@
             android:layout_marginBottom="32dp"/>
 
         <TextView
+            android:id="@+id/verificationTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Iniciar Sesión"
+            android:text="Verifica tu Email"
             android:textSize="26sp"
             android:textStyle="bold"
             android:textColor="@color/ritmofit_orange"
             android:layout_marginBottom="24dp"/>
 
 
+            <TextView
+                android:id="@+id/verificationSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:text="Ingresa el código de 6 dígitos de tu correo."
+                android:textColor="@color/ritmofit_dark"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
             <EditText
-                android:id="@+id/loginEmail"
+                android:id="@+id/otpEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="18dp"
                 android:backgroundTint="@color/ritmofit_gray"
-                android:hint="Usuario o Email"
-                android:inputType="textEmailAddress"
+                android:hint="Código OTP"
+                android:inputType="text|number"
                 android:minHeight="48dp"
                 android:textColor="@color/ritmofit_dark"
                 android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/loginPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="18dp"
-                android:backgroundTint="@color/ritmofit_gray"
-                android:hint="Contraseña"
-                android:inputType="textPassword"
-                android:minHeight="48dp"
-                android:textColor="@color/ritmofit_dark"
-                android:textSize="18sp" />
-
 
 
         <Button
-            android:id="@+id/loginButton"
+            android:id="@+id/verifyOtpButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Iniciar Sesion"
+            android:text="VERIFICAR"
             android:textSize="17sp"
             android:backgroundTint="@android:color/holo_blue_dark"
             android:textColor="@color/white"
             android:layout_marginBottom="18dp"/>
 
-            <Button
-                android:id="@+id/registerText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="18dp"
-                android:backgroundTint="@color/ritmofit_orange"
-                android:text="Registrarse"
-                android:textColor="@color/white"
-                android:textSize="17sp" />
-
-            <TextView
+        <TextView
             android:id="@+id/loginError"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -90,6 +78,17 @@
             android:visibility="gone"
             android:layout_marginBottom="12dp"/>
 
+            <Button
+                android:id="@+id/loginButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="18dp"
+                android:backgroundTint="@color/ritmofit_orange"
+                android:text="INGRESAR"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
         </LinearLayout>
     </ScrollView>
