@@ -17,8 +17,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import com.ritmofit.app.R;
+import com.ritmofit.app.data.repository.ScheduleRepository;
+import com.ritmofit.app.data.api.model.ScheduledClassDto;
 
 public class HomeFragment extends Fragment {
+    
+    private ScheduleRepository scheduleRepository;
+    
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -99,6 +104,9 @@ public class HomeFragment extends Fragment {
                         LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     params.setMargins(0, 0, 0, 24);
                     card.setLayoutParams(params);
+                    
+                    card.setClickable(true);
+                    card.setFocusable(true);
 
                     TextView title = new TextView(requireContext());
                     title.setText(c.disciplina + " - " + c.hora);
@@ -126,6 +134,22 @@ public class HomeFragment extends Fragment {
                     sede.setText("Sede: " + c.sede + " - " + c.ubicacion);
                     sede.setTextSize(16);
                     card.addView(sede);
+
+                    // Click listener para navegar a detalles
+                    card.setOnClickListener(v -> {
+                        Bundle args = new Bundle();
+                        args.putString("classId", "class_" + c.disciplina + "_" + c.hora);
+                        args.putString("className", c.disciplina);
+                        args.putString("classTime", c.hora);
+                        args.putString("classDate", c.fecha);
+                        args.putString("classProfessor", c.profesor);
+                        args.putString("classDuration", c.duracion);
+                        args.putString("classCapacity", c.cupos);
+                        args.putString("classLocation", c.sede + " - " + c.ubicacion);
+                        args.putString("classDescription", "Clase de " + c.disciplina + " con " + c.profesor + ". " + c.duracion + " de duración.");
+                        
+                        Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_classDetailFragment, args);
+                    });
 
                     classCatalogList.addView(card);
                 }
