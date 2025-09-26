@@ -23,18 +23,20 @@ import com.ritmofit.app.data.session.JwtHelper;
 import com.ritmofit.app.data.session.SessionManager;
 
 
+import android.content.Intent;
+
+
+import androidx.navigation.NavController;
+import com.ritmofit.app.ui.MainActivity;
+
+
 public class LoginFragment extends Fragment {
 
-    // Vistas de la UI
-    private EditText emailEdit;
-    private EditText otpEdit;
+    private EditText emailEdit, passwordEdit;
     private Button loginBtn;
-    private Button verifyOtpBtn;
-    private TextView errorText;
-
-    // Services y Repositories
+    private TextView registerText;
     private AuthRepository authRepository;
-
+    private SessionManager sessionManager;
 
     @Nullable
     @Override
@@ -43,93 +45,78 @@ public class LoginFragment extends Fragment {
 
         AuthService apiService = RitmoFitApiService.getClient().create(AuthService.class);
         authRepository = new AuthRepository(apiService);
+        // Inicializamos SessionManager y AuthRepository
+        sessionManager = new SessionManager(requireContext());
+        //authRepository = new AuthRepository(sessionManager.getToken());
 
+        // Vinculamos los componentes de la UI
         emailEdit = view.findViewById(R.id.loginEmail);
-        otpEdit = view.findViewById(R.id.loginOtp);
+        passwordEdit = view.findViewById(R.id.loginPassword);
         loginBtn = view.findViewById(R.id.loginButton);
-        verifyOtpBtn = view.findViewById(R.id.verifyOtpButton);
-        errorText = view.findViewById(R.id.loginError);
+        registerText = view.findViewById(R.id.registerText);
 
-        Button createUserBtn = view.findViewById(R.id.createUserButton);
-
-        createUserBtn.setOnClickListener(v -> {
-            Navigation.findNavController(view).navigate(R.id.createUserFragment);
-        });
-        // emailEdit.setEnabled(true);
-
-        // Configuramos el listener del botón principal
-        loginBtn.setOnClickListener(v -> handleRequestOtp());
-        verifyOtpBtn.setOnClickListener(v ->  handleVerifyOtp());
-
+        // Configuramos los listeners
+        setupListeners();
 
         return view;
     }
 
+    private void setupListeners() {
+        loginBtn.setOnClickListener(v -> handleLogin());
 
-
-    private void handleRequestOtp() {
-        String email = emailEdit.getText().toString().trim();
-
-        if (TextUtils.isEmpty(email) || !email.contains("@")) {
-            errorText.setText("Por favor, ingresa un email válido");
-            errorText.setVisibility(View.VISIBLE);
-            return;
-        }
-
-        authRepository.requestOtp(email, new RepositoryCallback<Void>() {
-            @Override
-            public void onSuccess(Void data) {
-                Toast.makeText(getContext(), "Código enviado a tu email", Toast.LENGTH_SHORT).show();
-
-                // Se oculta boton de login y se muestra el de verificar
-                otpEdit.setVisibility(View.VISIBLE);
-                verifyOtpBtn.setVisibility(View.VISIBLE);
-                loginBtn.setVisibility(View.GONE);
-                emailEdit.setEnabled(false);
-                errorText.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onError(String message) {
-                errorText.setText(message);
-                errorText.setVisibility(View.VISIBLE);
-            }
+        registerText.setOnClickListener(v -> {
+            // Usamos NavController para ir al fragmento de registro
+            NavController navController = Navigation.findNavController(v);
+            navController.navigate(R.id.action_loginFragment_to_createUserFragment);
         });
     }
 
-    private void handleVerifyOtp() {
+    private void handleLogin() {
         String email = emailEdit.getText().toString().trim();
-        String otp = otpEdit.getText().toString();
+        String password = passwordEdit.getText().toString();
 
-        if (TextUtils.isEmpty(otp)) {
-            errorText.setText("Por favor, ingresa el código OTP");
-            errorText.setVisibility(View.VISIBLE);
+        if (!validateInput(email, password)) {
             return;
         }
 
-        authRepository.verifyOtp(email, otp, new RepositoryCallback<AuthResponse>() {
+        // Deshabilitamos el botón para evitar múltiples clicks
+        loginBtn.setEnabled(false);
+
+        authRepository.login(email, password, new RepositoryCallback<AuthResponse>() {
             @Override
             public void onSuccess(AuthResponse response) {
-                String token = response.token();
+                // En caso de éxito, guardamos el token
+                sessionManager.saveAuth(email, response.token(), response.token());
 
-                String userId = JwtHelper.tryExtractUserId(token);
-
-                SessionManager sm = new SessionManager(requireContext().getApplicationContext());
-                sm.saveAuth(token, userId, email);
-
-                Toast.makeText(getContext(), "¡Login exitoso!", Toast.LENGTH_LONG).show();
-
-                // Navegamos al Home
-                if (getView() != null) {
-                    Navigation.findNavController(getView()).navigate(R.id.action_loginFragment_to_homeFragment);
+                // Navegamos a la actividad principal
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                startActivity(intent);
+                // Finalizamos la actividad actual para que el usuario no pueda volver atrás
+                if (getActivity() != null) {
+                    getActivity().finish();
                 }
             }
 
             @Override
             public void onError(String message) {
-                errorText.setText(message);
-                errorText.setVisibility(View.VISIBLE);
+                // Mostramos el error al usuario
+                Toast.makeText(getContext(), "Error: " + message, Toast.LENGTH_LONG).show();
+                // Habilitamos el botón nuevamente
+                loginBtn.setEnabled(true);
             }
         });
+    }
+
+    private boolean validateInput(String email, String password) {
+        if (TextUtils.isEmpty(email)) {
+            emailEdit.setError("El email es requerido.");
+            return false;
+        }
+        if (TextUtils.isEmpty(password)) {
+            passwordEdit.setError("La contraseña es requerida.");
+            return false;
+        }
+        // Puedes añadir validaciones más complejas aquí (e.g., formato de email)
+        return true;
     }
 }

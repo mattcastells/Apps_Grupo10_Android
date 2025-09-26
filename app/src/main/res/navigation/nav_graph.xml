@@ -10,16 +10,21 @@
         android:name="com.ritmofit.app.ui.login.LoginFragment"
         android:label="Login">
         <action
-            android:id="@+id/action_loginFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="true" />
+            android:id="@+id/action_loginFragment_to_createUserFragment"
+            app:destination="@id/createUserFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.ritmofit.app.ui.home.HomeFragment"
         android:label="Home">
+
+        <action
+            android:id="@+id/action_global_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+
         <action
             android:id="@+id/action_homeFragment_to_classDetailFragment"
             app:destination="@id/classDetailFragment" />
@@ -48,7 +53,26 @@
     <fragment
         android:id="@+id/createUserFragment"
         android:name="com.ritmofit.app.ui.createuser.CreateUserFragment"
-        android:label="Crear usuario" />
+        android:label="Crear usuario">
+        <action
+            android:id="@+id/action_createUserFragment_to_otpVerificationFragment"
+            app:destination="@id/otpVerificationFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/otpVerificationFragment"
+        android:name="com.ritmofit.app.ui.otp.OtpVerificationFragment"
+        android:label="fragment_otp_verification" >
+        <action
+            android:id="@+id/action_otpVerificationFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="email"
+            app:argType="string" />
+    </fragment>
+
     <fragment
         android:id="@+id/editUserFragment"
         android:name="com.ritmofit.app.ui.edituser.EditUserFragment"
