@@ -13,11 +13,15 @@ import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
+
 import androidx.navigation.Navigation;
 import androidx.navigation.NavOptions;
 import com.ritmofit.app.R;
 import com.ritmofit.app.data.RitmoFitApiService;
+import com.ritmofit.app.data.api.AuthService;
 import com.ritmofit.app.data.api.UserService;
+import com.ritmofit.app.data.repository.AuthRepository;
 import com.ritmofit.app.data.repository.RepositoryCallback;
 import com.ritmofit.app.data.repository.UserRepository;
 
@@ -31,6 +35,8 @@ public class CreateUserFragment extends Fragment {
     private Button createUserButton, changePhotoButton, backToLoginButton;
     private Uri selectedImageUri;
     private UserRepository userRepository;
+
+    private AuthRepository authRepository;
 
     // onCreateView: infla layout y configura UI
     @Nullable
@@ -55,8 +61,11 @@ public class CreateUserFragment extends Fragment {
         genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         genderSpinner.setAdapter(genderAdapter);
 
-        UserService apiService = RitmoFitApiService.getClient().create(UserService.class);
-        userRepository = new UserRepository(apiService);
+        //UserService apiService = RitmoFitApiService.getClient().create(UserService.class);
+        //userRepository = new UserRepository(apiService);
+        // Services
+        AuthService apiService = RitmoFitApiService.getClient().create(AuthService.class);
+        authRepository = new AuthRepository(apiService);
 
         changePhotoButton.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -95,12 +104,14 @@ public class CreateUserFragment extends Fragment {
             return;
         }
 
-        userRepository.createUser(name, email, ageStr, gender, password, new RepositoryCallback<Void>() {
+        authRepository.createUser(email, password, name, ageStr, gender, new RepositoryCallback<Void>() {
             @Override
             public void onSuccess(Void data) {
-                Toast.makeText(getContext(), "Usuario creado", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Usuario creado exitosamente. Por favor, verifique su email.", Toast.LENGTH_LONG).show();
+                CreateUserFragmentDirections.ActionCreateUserFragmentToOtpVerificationFragment action =
+                        CreateUserFragmentDirections.actionCreateUserFragmentToOtpVerificationFragment(email);
+                NavHostFragment.findNavController(CreateUserFragment.this).navigate(action);
             }
-
             @Override
             public void onError(String message) {
                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
