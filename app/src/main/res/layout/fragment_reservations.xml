@@ -27,71 +27,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Clase"
+                android:text="Mis Reservas"
                 android:textColor="@color/ritmofit_dark"
                 android:textStyle="bold"
-                android:textSize="18sp"
-                android:layout_marginBottom="10dp"
+                android:textSize="22sp"
+                android:layout_marginBottom="16dp"
                 android:letterSpacing="0.05"/>
-            <Spinner
-                android:id="@+id/classSpinner"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginBottom="24dp"
-                android:background="@drawable/white_rounded_border"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
-                android:layout_marginStart="0dp"
-                android:layout_marginEnd="0dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Horario"
-                android:textColor="@color/ritmofit_dark"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:layout_marginBottom="10dp"
-                android:letterSpacing="0.05"/>
-            <Spinner
-                android:id="@+id/timeSpinner"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginBottom="32dp"
-                android:background="@drawable/white_rounded_border"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
-                android:layout_marginStart="0dp"
-                android:layout_marginEnd="0dp"/>
-            <LinearLayout
-                android:id="@+id/classInfoCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/white_rounded_border"
-                android:padding="18dp"
-                android:layout_marginBottom="24dp"
-                android:layout_marginTop="0dp">
-                <!-- Aquí se llenará dinámicamente la info de la clase desde el fragment -->
-            </LinearLayout>
-            <Button
-                android:id="@+id/bookButton"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="RESERVAR"
-                android:textSize="20sp"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="24dp"
-                android:backgroundTint="@color/ritmofit_orange"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:elevation="2dp"
-                android:drawableLeft="@android:drawable/ic_menu_save"
-                android:drawablePadding="10dp"
-                android:letterSpacing="0.08"/>
             <TextView
                 android:id="@+id/noReservationsText"
                 android:layout_width="match_parent"

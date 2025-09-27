@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/homeFragment"         android:title="Home"       android:icon="@android:drawable/ic_menu_view"/>
     <item android:id="@+id/scanQrFragment"       android:title="Escanear"   android:icon="@android:drawable/ic_menu_camera"/>
-    <item android:id="@+id/reservationsFragment" android:title="Reservas"   android:icon="@android:drawable/ic_menu_agenda"/>
+    <item android:id="@+id/reservationsFragment" android:title="Mis Proximas"   android:icon="@android:drawable/ic_menu_agenda"/>
     <item android:id="@+id/newsFragment"         android:title="Noticias"   android:icon="@android:drawable/ic_menu_info_details"/>
     <item android:id="@+id/profileFragment"      android:title="Perfil"     android:icon="@drawable/ic_bodybuilder"/>
     <item android:id="@+id/historyFragment"      android:title="Historial"  android:icon="@drawable/ic_history_24" />

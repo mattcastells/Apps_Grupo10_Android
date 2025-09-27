@@ -17,12 +17,29 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import com.ritmofit.app.R;
+import com.ritmofit.app.data.RitmoFitApiService;
+import com.ritmofit.app.data.api.ScheduleService;
+import com.ritmofit.app.data.api.model.ScheduledClassDto;
+import com.ritmofit.app.data.repository.RepositoryCallback;
+import com.ritmofit.app.data.repository.ScheduleRepository;
+import java.util.List;
+import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
+    
+    private ScheduleRepository scheduleRepository;
+    private List<ScheduledClassDto> allClasses = new ArrayList<>();
+    private LinearLayout classCatalogList;
+    private Spinner filterSede, filterDisciplina, filterFecha;
+    
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        // Inicializar repositorio
+        ScheduleService scheduleService = RitmoFitApiService.getClient(getContext()).create(ScheduleService.class);
+        scheduleRepository = new ScheduleRepository(scheduleService);
 
         Button goToReservationsButton = view.findViewById(R.id.goToReservationsButton);
         Button goToProfileButton = view.findViewById(R.id.goToProfileButton);
@@ -42,11 +59,11 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        // Catálogo de Clases y Turnos (mockeado hasta conectar el back)
-        Spinner filterSede = view.findViewById(R.id.filterSede);
-        Spinner filterDisciplina = view.findViewById(R.id.filterDisciplina);
-        Spinner filterFecha = view.findViewById(R.id.filterFecha);
-        LinearLayout classCatalogList = view.findViewById(R.id.classCatalogList);
+        // Catálogo de Clases y Turnos (ahora desde el backend)
+        filterSede = view.findViewById(R.id.filterSede);
+        filterDisciplina = view.findViewById(R.id.filterDisciplina);
+        filterFecha = view.findViewById(R.id.filterFecha);
+        classCatalogList = view.findViewById(R.id.classCatalogList);
 
         String[] sedes = {"Todas", "Central", "Norte", "Oeste"};
         String[] disciplinas = {"Todas", "Yoga", "Funcional", "Zumba", "Spinning"};
@@ -64,122 +81,137 @@ public class HomeFragment extends Fragment {
         fechaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         filterFecha.setAdapter(fechaAdapter);
 
-        // Mock de clases
-        class ClassInfo {
-            String sede, disciplina, fecha, hora, profesor, cupos, duracion, ubicacion;
-            ClassInfo(String sede, String disciplina, String fecha, String hora, String profesor, String cupos, String duracion, String ubicacion) {
-                this.sede = sede; this.disciplina = disciplina; this.fecha = fecha; this.hora = hora;
-                this.profesor = profesor; this.cupos = cupos; this.duracion = duracion; this.ubicacion = ubicacion;
-            }
-        }
-        ClassInfo[] clases = {
-            new ClassInfo("Central", "Yoga", "Hoy", "10:00", "Ana López", "8/20", "60 min", "Salón 1"),
-            new ClassInfo("Norte", "Funcional", "Hoy", "18:00", "Juan Pérez", "15/20", "45 min", "Box 2"),
-            new ClassInfo("Oeste", "Zumba", "Mañana", "19:00", "Carla Ruiz", "20/20", "50 min", "Salón 2"),
-            new ClassInfo("Central", "Spinning", "Próx. Sábado", "11:00", "Leo Díaz", "5/15", "40 min", "Salón 3"),
-            new ClassInfo("Norte", "Yoga", "Mañana", "08:00", "María García", "12/15", "75 min", "Salón A"),
-            new ClassInfo("Oeste", "Funcional", "Próx. Sábado", "16:00", "Carlos Mendez", "18/25", "50 min", "Box 1"),
-            new ClassInfo("Central", "Zumba", "Hoy", "20:00", "Sofia Herrera", "22/25", "45 min", "Salón 2"),
-            new ClassInfo("Norte", "Spinning", "Mañana", "07:00", "Diego Torres", "10/20", "40 min", "Salón B")
-        };
+        // Cargar clases desde el backend
+        loadClassesFromBackend();
 
-        Runnable updateCatalog = () -> {
-            classCatalogList.removeAllViews();
-            String sedeSel = filterSede.getSelectedItem().toString();
-            String discSel = filterDisciplina.getSelectedItem().toString();
-            String fechaSel = filterFecha.getSelectedItem().toString();
-            
-            boolean hasResults = false;
-            for (ClassInfo c : clases) {
-                if ((sedeSel.equals("Todas") || c.sede.equals(sedeSel)) &&
-                    (discSel.equals("Todas") || c.disciplina.equals(discSel)) &&
-                    (fechaSel.equals("Todas") || c.fecha.equals(fechaSel))) {
-                    
-                    hasResults = true;
-                    LinearLayout card = new LinearLayout(requireContext());
-                    card.setOrientation(LinearLayout.VERTICAL);
-                    card.setBackgroundResource(R.drawable.class_card_bg);
-                    card.setElevation(8f);
-                    card.setPadding(24, 20, 24, 20);
-                    card.setClickable(true);
-                    card.setFocusable(true);
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    params.setMargins(0, 0, 0, 24);
-                    card.setLayoutParams(params);
-
-                    TextView title = new TextView(requireContext());
-                    title.setText(c.disciplina + " - " + c.hora);
-                    title.setTextSize(19);
-                    title.setTextColor(getResources().getColor(R.color.ritmofit_orange));
-                    title.setTypeface(null, android.graphics.Typeface.BOLD);
-                    card.addView(title);
-
-                    TextView prof = new TextView(requireContext());
-                    prof.setText("Profesor: " + c.profesor);
-                    prof.setTextSize(16);
-                    card.addView(prof);
-
-                    TextView cupos = new TextView(requireContext());
-                    cupos.setText("Cupos: " + c.cupos);
-                    cupos.setTextSize(16);
-                    card.addView(cupos);
-
-                    TextView dur = new TextView(requireContext());
-                    dur.setText("Duración: " + c.duracion);
-                    dur.setTextSize(16);
-                    card.addView(dur);
-
-                    TextView sede = new TextView(requireContext());
-                    sede.setText("Sede: " + c.sede + " - " + c.ubicacion);
-                    sede.setTextSize(16);
-                    card.addView(sede);
-
-                    // Hacer la tarjeta clickeable para navegar al detalle
-                    card.setOnClickListener(cardView -> {
-                        Bundle args = new Bundle();
-                        args.putString("disciplina", c.disciplina);
-                        args.putString("hora", c.hora);
-                        args.putString("profesor", c.profesor);
-                        args.putString("cupos", c.cupos);
-                        args.putString("duracion", c.duracion);
-                        args.putString("sede", c.sede);
-                        args.putString("ubicacion", c.ubicacion);
-                        args.putString("fecha", c.fecha);
-                        
-                        Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_classDetailFragment, args);
-                    });
-
-                    classCatalogList.addView(card);
-                }
-            }
-            
-            // Mostrar mensaje si no hay resultados
-            if (!hasResults) {
-                TextView noResults = new TextView(requireContext());
-                noResults.setText("No se encontraron clases con los filtros seleccionados");
-                noResults.setTextSize(16);
-                noResults.setTextColor(getResources().getColor(R.color.ritmofit_gray));
-                noResults.setGravity(Gravity.CENTER);
-                noResults.setPadding(24, 48, 24, 48);
-                classCatalogList.addView(noResults);
-            }
-        };
-
-        filterSede.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
-            @Override public void onItemSelected(android.widget.AdapterView<?> parent, View v, int pos, long id) { updateCatalog.run(); }
-            @Override public void onNothingSelected(android.widget.AdapterView<?> parent) {}
-        });
+        // Configurar listeners para filtros
         filterDisciplina.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
-            @Override public void onItemSelected(android.widget.AdapterView<?> parent, View v, int pos, long id) { updateCatalog.run(); }
+            @Override public void onItemSelected(android.widget.AdapterView<?> parent, View v, int pos, long id) { 
+                updateCatalogDisplay(); 
+            }
             @Override public void onNothingSelected(android.widget.AdapterView<?> parent) {}
         });
-        filterFecha.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
-            @Override public void onItemSelected(android.widget.AdapterView<?> parent, View v, int pos, long id) { updateCatalog.run(); }
-            @Override public void onNothingSelected(android.widget.AdapterView<?> parent) {}
-        });
-        updateCatalog.run();
 
         return view;
+    }
+
+    private void loadClassesFromBackend() {
+        scheduleRepository.getWeeklySchedule(new RepositoryCallback<List<ScheduledClassDto>>() {
+            @Override
+            public void onSuccess(List<ScheduledClassDto> classes) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        allClasses.clear();
+                        allClasses.addAll(classes);
+                        updateCatalogDisplay();
+                    });
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), "Error al cargar clases: " + error, Toast.LENGTH_LONG).show();
+                        showNoResultsMessage("Error al cargar las clases del servidor");
+                    });
+                }
+            }
+        });
+    }
+
+    private void updateCatalogDisplay() {
+        classCatalogList.removeAllViews();
+        
+        String discSel = filterDisciplina.getSelectedItem() != null ? 
+            filterDisciplina.getSelectedItem().toString() : "Todas";
+        
+        List<ScheduledClassDto> filteredClasses = new ArrayList<>();
+        
+        for (ScheduledClassDto scheduledClass : allClasses) {
+            if (discSel.equals("Todas") || scheduledClass.getName().contains(discSel)) {
+                filteredClasses.add(scheduledClass);
+            }
+        }
+        
+        if (filteredClasses.isEmpty()) {
+            showNoResultsMessage("No se encontraron clases con los filtros seleccionados");
+            return;
+        }
+        
+        for (ScheduledClassDto scheduledClass : filteredClasses) {
+            createClassCard(scheduledClass);
+        }
+    }
+
+    private void createClassCard(ScheduledClassDto scheduledClass) {
+        LinearLayout card = new LinearLayout(requireContext());
+        card.setOrientation(LinearLayout.VERTICAL);
+        card.setBackgroundResource(R.drawable.class_card_bg);
+        card.setElevation(8f);
+        card.setPadding(24, 20, 24, 20);
+        card.setClickable(true);
+        card.setFocusable(true);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0, 0, 0, 24);
+        card.setLayoutParams(params);
+
+        TextView title = new TextView(requireContext());
+        title.setText(scheduledClass.getName() + " - " + formatTime(scheduledClass.getDateTime()));
+        title.setTextSize(19);
+        title.setTextColor(getResources().getColor(R.color.ritmofit_orange));
+        title.setTypeface(null, android.graphics.Typeface.BOLD);
+        card.addView(title);
+
+        TextView prof = new TextView(requireContext());
+        prof.setText("Profesor: " + scheduledClass.getProfessor());
+        prof.setTextSize(16);
+        card.addView(prof);
+
+        TextView cupos = new TextView(requireContext());
+        cupos.setText("Cupos disponibles: " + scheduledClass.getAvailableSlots());
+        cupos.setTextSize(16);
+        card.addView(cupos);
+
+        TextView dur = new TextView(requireContext());
+        dur.setText("Duración: " + scheduledClass.getDurationMinutes() + " min");
+        dur.setTextSize(16);
+        card.addView(dur);
+
+        TextView fecha = new TextView(requireContext());
+        fecha.setText("Fecha: " + formatDate(scheduledClass.getDateTime()));
+        fecha.setTextSize(16);
+        card.addView(fecha);
+
+        // Hacer la tarjeta clickeable para navegar al detalle
+        card.setOnClickListener(cardView -> {
+            Bundle args = new Bundle();
+            args.putString("classId", scheduledClass.getId());
+            
+            Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_classDetailFragment, args);
+        });
+
+        classCatalogList.addView(card);
+    }
+
+    private void showNoResultsMessage(String message) {
+        TextView noResults = new TextView(requireContext());
+        noResults.setText(message);
+        noResults.setTextSize(16);
+        noResults.setTextColor(getResources().getColor(R.color.ritmofit_gray));
+        noResults.setGravity(Gravity.CENTER);
+        noResults.setPadding(24, 48, 24, 48);
+        classCatalogList.addView(noResults);
+    }
+
+    private String formatTime(String dateTimeString) {
+        if (dateTimeString == null || dateTimeString.length() < 16) return "N/A";
+        return dateTimeString.substring(11, 16);
+    }
+
+    private String formatDate(String dateTimeString) {
+        if (dateTimeString == null || dateTimeString.length() < 10) return "N/A";
+        return dateTimeString.substring(0, 10);
     }
 }

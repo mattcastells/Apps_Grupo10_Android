@@ -82,30 +82,53 @@
         android:id="@+id/classDetailFragment"
         android:name="com.ritmofit.app.ui.classdetail.ClassDetailFragment"
         android:label="Detalle de Clase">
+        <!-- Nuevo argumento para integración con backend -->
+        <argument
+            android:name="classId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <!-- Argumentos legacy para compatibilidad hacia atrás -->
         <argument
             android:name="disciplina"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <argument
             android:name="hora"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <argument
             android:name="profesor"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <argument
             android:name="cupos"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <argument
             android:name="duracion"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <argument
             android:name="sede"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <argument
             android:name="ubicacion"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <argument
             android:name="fecha"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
 
     <fragment
