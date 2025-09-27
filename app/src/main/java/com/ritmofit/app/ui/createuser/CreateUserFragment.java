@@ -13,9 +13,13 @@ import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.ritmofit.app.R;
 import com.ritmofit.app.data.RitmoFitApiService;
+import com.ritmofit.app.data.api.AuthService;
 import com.ritmofit.app.data.api.UserService;
+import com.ritmofit.app.data.repository.AuthRepository;
 import com.ritmofit.app.data.repository.RepositoryCallback;
 import com.ritmofit.app.data.repository.UserRepository;
 
@@ -27,7 +31,7 @@ public class CreateUserFragment extends Fragment {
     private Button createUserButton, changePhotoButton;
     private Uri selectedImageUri;
 
-    private UserRepository userRepository;
+    private AuthRepository authRepository;
 
     @Nullable
     @Override
@@ -52,8 +56,8 @@ public class CreateUserFragment extends Fragment {
         genderSpinner.setAdapter(genderAdapter);
 
         // Services
-        UserService apiService = RitmoFitApiService.getClient().create(UserService.class);
-        userRepository = new UserRepository(apiService);
+        AuthService apiService = RitmoFitApiService.getClient().create(AuthService.class);
+        authRepository = new AuthRepository(apiService);
 
         changePhotoButton.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -77,10 +81,13 @@ public class CreateUserFragment extends Fragment {
                 return;
             }
 
-            userRepository.createUser(name, email, ageStr, gender, password, new RepositoryCallback<Void>() {
+            authRepository.createUser(email, password, name, ageStr, gender, new RepositoryCallback<Void>() {
                 @Override
                 public void onSuccess(Void data) {
-                    Toast.makeText(getContext(), "Usuario creado exitosamente", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Usuario creado exitosamente. Por favor, verifique su email.", Toast.LENGTH_LONG).show();
+                    CreateUserFragmentDirections.ActionCreateUserFragmentToOtpVerificationFragment action =
+                            CreateUserFragmentDirections.actionCreateUserFragmentToOtpVerificationFragment(email);
+                    NavHostFragment.findNavController(CreateUserFragment.this).navigate(action);
                 }
                 @Override
                 public void onError(String message) {

@@ -12,6 +12,7 @@ import com.ritmofit.app.data.api.model.LoginRequest;
 import com.ritmofit.app.data.api.model.OtpRequest;
 import com.ritmofit.app.data.api.AuthService;
 import com.ritmofit.app.data.api.model.OtpVerifyRequest;
+import com.ritmofit.app.data.api.model.UserRequest;
 
 import java.util.Map;
 
@@ -40,6 +41,35 @@ public class AuthRepository {
             @Override
             public void onFailure(Call<AuthResponse> call, Throwable t) {
                 callback.onError(t.getMessage());
+            }
+        });
+    }
+
+    public void createUser(String email, String password, String name, String ageStr, String gender,
+                           final RepositoryCallback<Void> callback) {
+
+        UserRequest req = new UserRequest(
+                name,
+                email,
+                Integer.valueOf(ageStr),
+                gender,
+                password
+        );
+
+        authService.register(req).enqueue(new Callback<Map<String, String>>() {
+            @Override
+            public void onResponse(@NonNull Call<Map<String, String>> call, @NonNull Response<Map<String, String>> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(null);
+                } else {
+                    callback.onError("Error al crear usuario: Código " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Map<String, String>> call, @NonNull Throwable t) {
+                // Ocurrió un error de red (sin conexión, timeout, etc.)
+                callback.onError("Error de red: " + t.getMessage());
             }
         });
     }
