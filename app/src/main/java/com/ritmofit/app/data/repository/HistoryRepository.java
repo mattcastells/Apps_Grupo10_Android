@@ -23,17 +23,13 @@ public class HistoryRepository {
 
     public void getMyHistory(String from, String to,
                              RepositoryCallback<List<HistoryItemResponse>> cb) {
-        String userId = sm.getUserId();
-        if (userId == null || userId.isEmpty()) {
-            cb.onError("No hay userId en sesión");
-            return;
-        }
+        String userId = "6502251846b9a22a364b9011";
 
         api.getMyHistory(userId, from, to).enqueue(new Callback<List<HistoryItemResponse>>() {
             @Override public void onResponse(@NonNull Call<List<HistoryItemResponse>> call,
                                              @NonNull Response<List<HistoryItemResponse>> resp) {
                 if (resp.isSuccessful() && resp.body()!=null) cb.onSuccess(resp.body());
-                else cb.onError("Error " + resp.code());
+                else cb.onError("Error " + resp.code() + " Body: " + resp.errorBody()); // Añadido errorBody para más info
             }
             @Override public void onFailure(@NonNull Call<List<HistoryItemResponse>> call,
                                             @NonNull Throwable t) {
@@ -44,6 +40,7 @@ public class HistoryRepository {
 
     public void getDetail(String attendanceId,
                           RepositoryCallback<com.ritmofit.app.data.api.model.HistoryDetailResponse> cb) {
+        // No se necesita userId aquí directamente, se usa attendanceId
         api.getAttendanceDetail(attendanceId).enqueue(new retrofit2.Callback<com.ritmofit.app.data.api.model.HistoryDetailResponse>() {
             @Override public void onResponse(@NonNull retrofit2.Call<com.ritmofit.app.data.api.model.HistoryDetailResponse> call,
                                              @NonNull retrofit2.Response<com.ritmofit.app.data.api.model.HistoryDetailResponse> resp) {
