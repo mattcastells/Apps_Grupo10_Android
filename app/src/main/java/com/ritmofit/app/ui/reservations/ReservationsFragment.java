@@ -5,8 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Spinner;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,135 +14,184 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.ritmofit.app.R;
+import com.ritmofit.app.data.RitmoFitApiService;
+import com.ritmofit.app.data.api.BookingService;
+import com.ritmofit.app.data.api.model.UserBookingDto;
+import com.ritmofit.app.data.repository.BookingRepository;
+import com.ritmofit.app.data.repository.RepositoryCallback;
+import java.util.List;
 
 public class ReservationsFragment extends Fragment {
+    
+    private BookingRepository bookingRepository;
+    private LinearLayout myReservationsContainer;
+    private TextView noReservationsText;
+    
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_reservations, container, false);
 
-        Spinner classSpinner = view.findViewById(R.id.classSpinner);
-        Spinner timeSpinner = view.findViewById(R.id.timeSpinner);
-        Button bookButton = view.findViewById(R.id.bookButton);
-        LinearLayout myReservationsContainer = view.findViewById(R.id.myReservationsContainer);
-        TextView noReservationsText = view.findViewById(R.id.noReservationsText);
-        LinearLayout classInfoCard = view.findViewById(R.id.classInfoCard);
+        // Inicializar repositorio
+        BookingService bookingService = RitmoFitApiService.getClient(getContext()).create(BookingService.class);
+        bookingRepository = new BookingRepository(bookingService);
 
-        if (myReservationsContainer.getChildCount() == 0) {
-            noReservationsText.setVisibility(View.VISIBLE);
-        } else {
-            noReservationsText.setVisibility(View.GONE);
-        }
+        myReservationsContainer = view.findViewById(R.id.myReservationsContainer);
+        noReservationsText = view.findViewById(R.id.noReservationsText);
 
-        // Mock de clases y horarios con info extendida
-        class ClaseInfo {
-            String nombre, profesor, cupos, duracion, sede, ubicacion;
-            String[] horarios;
-            ClaseInfo(String nombre, String profesor, String cupos, String duracion, String sede, String ubicacion, String[] horarios) {
-                this.nombre = nombre; this.profesor = profesor; this.cupos = cupos; this.duracion = duracion; this.sede = sede; this.ubicacion = ubicacion; this.horarios = horarios;
-            }
-        }
-        ClaseInfo[] clasesInfo = new ClaseInfo[] {
-            new ClaseInfo("Yoga", "Ana López", "8/20", "60 min", "Central", "Salón 1", new String[]{"Lunes 10:00", "Miércoles 10:00"}),
-            new ClaseInfo("Funcional", "Juan Pérez", "15/20", "45 min", "Norte", "Box 2", new String[]{"Martes 18:00", "Jueves 18:00"}),
-            new ClaseInfo("Zumba", "Carla Ruiz", "20/20", "50 min", "Oeste", "Salón 2", new String[]{"Viernes 19:00"}),
-            new ClaseInfo("Spinning", "Leo Díaz", "5/15", "40 min", "Central", "Salón 3", new String[]{"Sábado 11:00", "Domingo 11:00"})
-        };
-        String[] clases = new String[clasesInfo.length];
-        for (int i = 0; i < clasesInfo.length; i++) clases[i] = clasesInfo[i].nombre;
+        // Cargar reservas del backend
+        loadMyReservations();
 
-
-        ArrayAdapter<String> classAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, clases);
-        classAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        classSpinner.setAdapter(classAdapter);
-
-        ArrayAdapter<String> timeAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, clasesInfo[0].horarios);
-        timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        timeSpinner.setAdapter(timeAdapter);
-
-        // Mostrar info de la clase seleccionada
-        Runnable updateClassInfo = () -> {
-            int pos = classSpinner.getSelectedItemPosition();
-            ClaseInfo c = clasesInfo[pos];
-            classInfoCard.removeAllViews();
-            TextView prof = new TextView(getContext());
-            prof.setText("Profesor: " + c.profesor);
-            prof.setTextSize(16);
-            classInfoCard.addView(prof);
-            TextView cupos = new TextView(getContext());
-            cupos.setText("Cupos: " + c.cupos);
-            cupos.setTextSize(16);
-            classInfoCard.addView(cupos);
-            TextView dur = new TextView(getContext());
-            dur.setText("Duración: " + c.duracion);
-            dur.setTextSize(16);
-            classInfoCard.addView(dur);
-            TextView sede = new TextView(getContext());
-            sede.setText("Sede: " + c.sede + " - " + c.ubicacion);
-            sede.setTextSize(16);
-            classInfoCard.addView(sede);
-        };
-        updateClassInfo.run();
-
-        classSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
-                ArrayAdapter<String> newTimeAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_item, clasesInfo[position].horarios);
-                newTimeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                timeSpinner.setAdapter(newTimeAdapter);
-                updateClassInfo.run();
-            }
-            @Override
-            public void onNothingSelected(android.widget.AdapterView<?> parent) {}
-        });
-
-        bookButton.setOnClickListener(v -> {
-            String clase = (String) classSpinner.getSelectedItem();
-            String horario = (String) timeSpinner.getSelectedItem();
-            if (clase == null || horario == null) {
-                Toast.makeText(getContext(), "Selecciona clase y horario", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getContext(), "Reserva realizada para " + clase + " el " + horario, Toast.LENGTH_LONG).show();
-                // Crear layout para la reserva con fondo blanco y borde naranja
-                LinearLayout card = new LinearLayout(getContext());
-                card.setOrientation(LinearLayout.HORIZONTAL);
-                card.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-                card.setBackgroundResource(R.drawable.reservation_card);
-                card.setPadding(24, 18, 24, 18);
-                card.setElevation(4f);
-
-                TextView reservaView = new TextView(getContext());
-                reservaView.setText("• " + clase + " - " + horario);
-                reservaView.setTextSize(18);
-                reservaView.setLayoutParams(new LayoutParams(0, LayoutParams.WRAP_CONTENT, 1));
-
-                Button deleteButton = new Button(getContext());
-                deleteButton.setText("Eliminar");
-                deleteButton.setTextSize(16);
-                deleteButton.setOnClickListener(btn -> {
-                    new AlertDialog.Builder(getContext())
-                        .setTitle("Eliminar reserva")
-                        .setMessage("¿Estás seguro que deseas eliminar esta reserva?")
-                        .setPositiveButton("Sí", (dialog, which) -> {
-                            myReservationsContainer.removeView(card);
-                            if (myReservationsContainer.getChildCount() == 0) {
-                                noReservationsText.setVisibility(View.VISIBLE);
-                            }
-                        })
-                        .setNegativeButton("No", null)
-                        .show();
-                });
-
-                card.addView(reservaView);
-                card.addView(deleteButton);
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) card.getLayoutParams();
-                params.setMargins(0, 0, 0, 24);
-                card.setLayoutParams(params);
-                myReservationsContainer.addView(card, 0);
-                noReservationsText.setVisibility(View.GONE);
-            }
-        });
 
         return view;
+    }
+
+    private void loadMyReservations() {
+        bookingRepository.getMyBookings(new RepositoryCallback<List<UserBookingDto>>() {
+            @Override
+            public void onSuccess(List<UserBookingDto> reservations) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        displayReservations(reservations);
+                    });
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        // Log detallado del error
+                        android.util.Log.e("ReservationsFragment", "Error detallado: " + error);
+                        
+                        Toast.makeText(getContext(), "Error de conexión: " + error, Toast.LENGTH_LONG).show();
+                        // Mostrar mensaje de no reservas si hay error
+                        myReservationsContainer.removeAllViews();
+                        noReservationsText.setVisibility(View.VISIBLE);
+                    });
+                }
+            }
+        });
+    }
+
+    private void displayReservations(List<UserBookingDto> reservations) {
+        myReservationsContainer.removeAllViews();
+
+        if (reservations.isEmpty()) {
+            noReservationsText.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        noReservationsText.setVisibility(View.GONE);
+
+        for (UserBookingDto reservation : reservations) {
+            createReservationCard(reservation);
+        }
+    }
+
+    private void createReservationCard(UserBookingDto reservation) {
+        // Crear layout para la reserva con fondo blanco y borde naranja
+        LinearLayout card = new LinearLayout(getContext());
+        card.setOrientation(LinearLayout.VERTICAL);
+        card.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+        card.setBackgroundResource(R.drawable.reservation_card);
+        card.setPadding(24, 18, 24, 18);
+        card.setElevation(4f);
+
+        // Contenedor horizontal para el contenido principal
+        LinearLayout contentContainer = new LinearLayout(getContext());
+        contentContainer.setOrientation(LinearLayout.HORIZONTAL);
+        contentContainer.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+
+        // Contenedor vertical para la información de la clase
+        LinearLayout infoContainer = new LinearLayout(getContext());
+        infoContainer.setOrientation(LinearLayout.VERTICAL);
+        infoContainer.setLayoutParams(new LayoutParams(0, LayoutParams.WRAP_CONTENT, 1));
+
+        // Título de la clase
+        TextView classNameView = new TextView(getContext());
+        classNameView.setText(reservation.getClassName());
+        classNameView.setTextSize(18);
+        classNameView.setTextColor(getResources().getColor(R.color.ritmofit_orange, null));
+        classNameView.setTypeface(null, android.graphics.Typeface.BOLD);
+
+        // Profesor
+        TextView professorView = new TextView(getContext());
+        professorView.setText("Profesor: " + reservation.getProfessor());
+        professorView.setTextSize(14);
+
+        // Fecha y hora
+        TextView dateTimeView = new TextView(getContext());
+        dateTimeView.setText(reservation.getFormattedDate() + " a las " + reservation.getFormattedTime());
+        dateTimeView.setTextSize(14);
+
+        // Estado
+        TextView statusView = new TextView(getContext());
+        statusView.setText("Estado: " + reservation.getStatus());
+        statusView.setTextSize(12);
+        statusView.setTextColor(getResources().getColor(android.R.color.darker_gray, null));
+
+        infoContainer.addView(classNameView);
+        infoContainer.addView(professorView);
+        infoContainer.addView(dateTimeView);
+        infoContainer.addView(statusView);
+
+        // Botón cancelar con estilo naranja
+        Button deleteButton = new Button(getContext());
+        deleteButton.setText("Cancelar");
+        deleteButton.setTextSize(14);
+        deleteButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+        
+        // Aplicar estilo naranja de RitmoFit (mismo estilo que otros botones)
+        deleteButton.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
+            getResources().getColor(R.color.ritmofit_orange, null)));
+        deleteButton.setTextColor(getResources().getColor(android.R.color.white, null));
+        deleteButton.setPadding(24, 12, 24, 12);
+        deleteButton.setAllCaps(false); // Para mantener el texto "Cancelar" en lugar de "CANCELAR"
+        deleteButton.setOnClickListener(btn -> {
+            new AlertDialog.Builder(getContext())
+                .setTitle("Cancelar reserva")
+                .setMessage("¿Estás seguro que deseas cancelar la reserva para " + reservation.getClassName() + "?")
+                .setPositiveButton("Sí", (dialog, which) -> {
+                    // Cancelar reserva en el backend
+                    bookingRepository.cancelBooking(reservation.getBookingId(), new RepositoryCallback<Void>() {
+                        @Override
+                        public void onSuccess(Void result) {
+                            if (getActivity() != null) {
+                                getActivity().runOnUiThread(() -> {
+                                    Toast.makeText(getContext(), "Reserva cancelada exitosamente", Toast.LENGTH_SHORT).show();
+                                    // Remover visualmente la tarjeta
+                                    myReservationsContainer.removeView(card);
+                                    if (myReservationsContainer.getChildCount() == 0) {
+                                        noReservationsText.setVisibility(View.VISIBLE);
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onError(String error) {
+                            if (getActivity() != null) {
+                                getActivity().runOnUiThread(() -> {
+                                    Toast.makeText(getContext(), "Error al cancelar: " + error, Toast.LENGTH_LONG).show();
+                                });
+                            }
+                        }
+                    });
+                })
+                .setNegativeButton("No", null)
+                .show();
+        });
+
+        contentContainer.addView(infoContainer);
+        contentContainer.addView(deleteButton);
+        card.addView(contentContainer);
+
+        // Agregar margen inferior
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) card.getLayoutParams();
+        params.setMargins(0, 0, 0, 24);
+        card.setLayoutParams(params);
+
+        myReservationsContainer.addView(card);
     }
 }
