@@ -13,6 +13,8 @@ import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.navigation.NavOptions;
 import com.ritmofit.app.R;
 import com.ritmofit.app.data.RitmoFitApiService;
 import com.ritmofit.app.data.api.UserService;
@@ -20,15 +22,17 @@ import com.ritmofit.app.data.repository.RepositoryCallback;
 import com.ritmofit.app.data.repository.UserRepository;
 
 public class CreateUserFragment extends Fragment {
+
     private static final int PICK_IMAGE = 1;
+
     private ImageView profileImage;
     private EditText nameEditText, emailEditText, ageEditText, passwordEditText, confirmPasswordEditText;
     private Spinner genderSpinner;
-    private Button createUserButton, changePhotoButton;
+    private Button createUserButton, changePhotoButton, backToLoginButton;
     private Uri selectedImageUri;
-
     private UserRepository userRepository;
 
+    // onCreateView: infla layout y configura UI
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -44,14 +48,13 @@ public class CreateUserFragment extends Fragment {
         genderSpinner = view.findViewById(R.id.genderSpinner);
         createUserButton = view.findViewById(R.id.createUserButton);
         changePhotoButton = view.findViewById(R.id.changePhotoButton);
+        backToLoginButton = view.findViewById(R.id.backToLoginButton);
 
-        // Gender spinner
-        ArrayAdapter<CharSequence> genderAdapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.gender_options, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> genderAdapter = ArrayAdapter.createFromResource(
+                getContext(), R.array.gender_options, android.R.layout.simple_spinner_item);
         genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         genderSpinner.setAdapter(genderAdapter);
 
-        // Services
         UserService apiService = RitmoFitApiService.getClient().create(UserService.class);
         userRepository = new UserRepository(apiService);
 
@@ -60,38 +63,52 @@ public class CreateUserFragment extends Fragment {
             startActivityForResult(intent, PICK_IMAGE);
         });
 
-        createUserButton.setOnClickListener(v -> {
-            String name = nameEditText.getText().toString().trim();
-            String email = emailEditText.getText().toString().trim();
-            String ageStr = ageEditText.getText().toString().trim();
-            String password = passwordEditText.getText().toString();
-            String confirmPassword = confirmPasswordEditText.getText().toString();
-            String gender = genderSpinner.getSelectedItem().toString();
+        createUserButton.setOnClickListener(v -> submit());
 
-            if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || TextUtils.isEmpty(ageStr) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword)) {
-                Toast.makeText(getContext(), "Por favor completa todos los campos obligatorios", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (!password.equals(confirmPassword)) {
-                Toast.makeText(getContext(), "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            userRepository.createUser(name, email, ageStr, gender, password, new RepositoryCallback<Void>() {
-                @Override
-                public void onSuccess(Void data) {
-                    Toast.makeText(getContext(), "Usuario creado exitosamente", Toast.LENGTH_SHORT).show();
-                }
-                @Override
-                public void onError(String message) {
-                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-                }
-            });
+        // Volver al login (eliminando createUser del back stack)
+        backToLoginButton.setOnClickListener(v -> {
+            NavOptions opts = new NavOptions.Builder()
+                    .setPopUpTo(R.id.createUserFragment, true)
+                    .build();
+            Navigation.findNavController(v).navigate(R.id.loginFragment, null, opts);
         });
 
         return view;
     }
 
+    // submit: valida y envía datos de registro
+    private void submit() {
+        String name = nameEditText.getText().toString().trim();
+        String email = emailEditText.getText().toString().trim();
+        String ageStr = ageEditText.getText().toString().trim();
+        String password = passwordEditText.getText().toString();
+        String confirmPassword = confirmPasswordEditText.getText().toString();
+        String gender = genderSpinner.getSelectedItem().toString();
+
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || TextUtils.isEmpty(ageStr)
+                || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword)) {
+            Toast.makeText(getContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!password.equals(confirmPassword)) {
+            Toast.makeText(getContext(), "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        userRepository.createUser(name, email, ageStr, gender, password, new RepositoryCallback<Void>() {
+            @Override
+            public void onSuccess(Void data) {
+                Toast.makeText(getContext(), "Usuario creado", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String message) {
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // onActivityResult: recibe y muestra imagen seleccionada
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
