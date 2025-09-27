@@ -23,13 +23,20 @@ public class HistoryRepository {
 
     public void getMyHistory(String from, String to,
                              RepositoryCallback<List<HistoryItemResponse>> cb) {
-        String userId = "6502251846b9a22a364b9011";
+        // ---- INICIO RESTAURACIÓN ----
+        String userId = sm.getUserId(); // Se restaura para obtener el userId de la sesión
+
+        if (userId == null || userId.isEmpty()) { // Se restaura la validación
+            cb.onError("No hay userId en sesión");
+            return;
+        }
+        // ---- FIN RESTAURACIÓN ----
 
         api.getMyHistory(userId, from, to).enqueue(new Callback<List<HistoryItemResponse>>() {
             @Override public void onResponse(@NonNull Call<List<HistoryItemResponse>> call,
                                              @NonNull Response<List<HistoryItemResponse>> resp) {
                 if (resp.isSuccessful() && resp.body()!=null) cb.onSuccess(resp.body());
-                else cb.onError("Error " + resp.code() + " Body: " + resp.errorBody()); // Añadido errorBody para más info
+                else cb.onError("Error " + resp.code() + " Body: " + resp.errorBody());
             }
             @Override public void onFailure(@NonNull Call<List<HistoryItemResponse>> call,
                                             @NonNull Throwable t) {
