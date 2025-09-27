@@ -28,6 +28,9 @@ import com.ritmofit.app.data.session.SessionManager;
 import android.content.SharedPreferences;
 import com.bumptech.glide.Glide;
 import javax.inject.Inject;
+import android.util.Base64;
+import org.json.JSONObject;
+import java.nio.charset.StandardCharsets;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -82,7 +85,6 @@ public class ProfileFragment extends Fragment {
                 });
 
         String userId = sessionManager.getUserId();
-        String email  = sessionManager.getEmail();
 
         if (userId == null) {
             // Plan A (si JWT no tenía userId): usar email para buscarlo, o deshabilitar edición y pedir re-login

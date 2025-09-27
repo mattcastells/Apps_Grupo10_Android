@@ -15,7 +15,7 @@ public class SessionManager {
         this.prefs = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
     }
 
-    public void saveAuth(String token, String userId, String email) {
+    public void saveAuth(String email, String userId, String token) {
         prefs.edit()
                 .putString(KEY_TOKEN, token)
                 .putString(KEY_USER_ID, userId)
