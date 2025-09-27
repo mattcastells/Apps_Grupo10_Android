@@ -67,7 +67,25 @@ public class LoginFragment extends Fragment {
         authRepository.login(email, password, new RepositoryCallback<AuthResponse>() {
             @Override
             public void onSuccess(AuthResponse response) {
-                sessionManager.saveAuth(email, response.token(), response.token());
+
+                String token = response.token();
+
+                String userId = null;
+                try {
+                    String[] parts = token.split("\\.", 3); // header.payload.signature
+                    if (parts.length >= 2) {
+                        String payloadB64 = parts[1];
+                        // base64url padding
+                        int pad = (4 - (payloadB64.length() % 4)) % 4;
+                        if (pad > 0) payloadB64 += "===".substring(0, pad);
+                        byte[] decoded = android.util.Base64.decode(payloadB64,
+                                android.util.Base64.URL_SAFE | android.util.Base64.NO_WRAP);
+                        String payloadJson = new String(decoded, java.nio.charset.StandardCharsets.UTF_8);
+                        userId = new org.json.JSONObject(payloadJson).optString("sub", null);
+                    }
+                } catch (Exception ignore) {}
+
+                sessionManager.saveAuth(email, userId, token);
                 if (!isAdded()) return;
 
                 NavController navController = Navigation.findNavController(requireView());

@@ -33,7 +33,7 @@ public class EditUserFragment extends Fragment {
     private ImageView profileImage;
     private EditText nameEditText, emailEditText, ageEditText, passwordEditText, confirmPasswordEditText;
     private Spinner genderSpinner;
-    private Button saveEditButton, changePhotoButton;
+    private Button saveEditButton, changePhotoButton, cancelEditButton;
     private Uri selectedImageUri;
 
     // Services
@@ -57,11 +57,18 @@ public class EditUserFragment extends Fragment {
         genderSpinner = view.findViewById(R.id.genderSpinner);
         saveEditButton = view.findViewById(R.id.saveEditButton);
         changePhotoButton = view.findViewById(R.id.changePhotoButton);
+        cancelEditButton = view.findViewById(R.id.cancelEditButton);
 
         changePhotoButton.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(intent, PICK_IMAGE);
         });
+
+        cancelEditButton.setOnClickListener(v ->
+                androidx.navigation.fragment.NavHostFragment
+                        .findNavController(EditUserFragment.this)
+                        .navigateUp()
+        );
 
         // Services
         //UserService apiService = RitmoFitApiService.getClient().create(UserService.class);

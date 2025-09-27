@@ -112,5 +112,14 @@
             android:backgroundTint="@color/ritmofit_orange"
             android:textColor="@color/white"
             android:layout_marginTop="24dp"/>
+        <Button
+            android:id="@+id/cancelEditButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cancelar"
+            android:textSize="16sp"
+            android:backgroundTint="@color/ritmofit_gray"
+            android:textColor="@color/ritmofit_dark"
+            android:layout_marginTop="12dp"/>
     </LinearLayout>
 </ScrollView>
