@@ -38,17 +38,17 @@ public class BookingRepository {
 
     public void createBooking(String scheduledClassId, final RepositoryCallback<BookingResponse> callback) {
         BookingRequest request = new BookingRequest(scheduledClassId);
-        
         bookingService.createBooking(request).enqueue(new Callback<BookingResponse>() {
             @Override
             public void onResponse(@NonNull Call<BookingResponse> call, @NonNull Response<BookingResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     callback.onSuccess(response.body());
+                } else if (response.code() == 409) {
+                    callback.onError("La clase ya fue reservada.");
                 } else {
                     callback.onError("Error al crear la reserva: Código " + response.code());
                 }
             }
-
             @Override
             public void onFailure(@NonNull Call<BookingResponse> call, @NonNull Throwable t) {
                 callback.onError("Error de red al crear la reserva: " + t.getMessage());
