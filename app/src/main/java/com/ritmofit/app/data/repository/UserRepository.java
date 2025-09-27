@@ -21,34 +21,6 @@ public class UserRepository {
         this.userService = userService;
     }
 
-    public void createUser(String email, String password, String name, String ageStr, String gender,
-                           final RepositoryCallback<Void> callback) {
-
-        UserRequest req = new UserRequest(
-                name,
-                email,
-                Integer.valueOf(ageStr),
-                gender,
-                password
-        );
-
-        userService.createUser(req).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                if (response.isSuccessful()) {
-                    callback.onSuccess(null);
-                } else {
-                    callback.onError("Error al crear usuario: Código " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                // Ocurrió un error de red (sin conexión, timeout, etc.)
-                callback.onError("Error de red: " + t.getMessage());
-            }
-        });
-    }
 
     public void updateUser(String userId, String name, String email, String ageStr, String gender,
                            String profilePicture, String password, final RepositoryCallback<Void> callback) {
