@@ -1,5 +1,7 @@
 package com.ritmofit.app.ui.classdetail;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +54,7 @@ public class ClassDetailFragment extends Fragment {
     private TextView classDescripcion;
     private Button reservarButton;
     private Button backButton;
+    private Button verMapaButton;
 
     @Nullable
     @Override
@@ -76,6 +79,7 @@ public class ClassDetailFragment extends Fragment {
         classDescripcion = view.findViewById(R.id.classDescripcion);
         reservarButton = view.findViewById(R.id.reservarButton);
         backButton = view.findViewById(R.id.backButton);
+        verMapaButton = view.findViewById(R.id.verMapaButton);
 
         // Obtener argumentos pasados desde el fragment anterior
         Bundle args = getArguments();
@@ -132,6 +136,11 @@ public class ClassDetailFragment extends Fragment {
         // Configurar botón de volver
         backButton.setOnClickListener(v -> {
             Navigation.findNavController(view).popBackStack();
+        });
+
+        // Configurar botón de ver mapa
+        verMapaButton.setOnClickListener(v -> {
+            openMap();
         });
 
         // Manejar el botón de atrás del sistema
@@ -243,6 +252,23 @@ public class ClassDetailFragment extends Fragment {
                 return "Clase de ciclismo indoor de alta intensidad que mejora la resistencia cardiovascular y fortalece las piernas. Música motivadora incluida.";
             default:
                 return "Clase de fitness diseñada para mejorar tu condición física y bienestar general. ¡Ven y disfruta de una experiencia única!";
+        }
+    }
+
+    private void openMap() {
+        double latitude = -34.61709214740957;
+        double longitude = -58.38197224422459;
+
+        Uri gmmIntentUri = Uri.parse("geo:" + latitude + "," + longitude + "?q=" + latitude + "," + longitude);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+
+        if (mapIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
+            startActivity(mapIntent);
+        } else {
+            Uri webUri = Uri.parse("https://www.google.com/maps/search/?api=1&query=" + latitude + "," + longitude);
+            Intent webIntent = new Intent(Intent.ACTION_VIEW, webUri);
+            startActivity(webIntent);
         }
     }
 }
